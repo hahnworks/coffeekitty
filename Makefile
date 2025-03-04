@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Iinclude $(shell pkg-config --cflags libxml-2.0) -Wall -Wextra -g -O0
+CFLAGS = -Iinclude $(shell pkg-config --cflags libxml-2.0) -Wall -Wextra
 LIBS = $(shell pkg-config --libs libxml-2.0) -lm
 SRC = $(wildcard src/*.c)
 OBJ = $(SRC:.c=.o)
