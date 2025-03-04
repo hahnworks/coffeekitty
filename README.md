@@ -1,6 +1,6 @@
 # ☕🫰😺 coffeekitty
 
-A terminal based managment tool for collective coffee spending
+A terminal-based management tool for collective coffee spending
 
 ## Idea
 
@@ -9,14 +9,14 @@ You can create a tally sheet with the persons currently drinking coffee, where e
 
 ![coffeekitty latex](img/coffeekitty_print.png)
 
-At the end of an accounting period you can enter the coffee consumption, where `coffeekitty` will then calculate the balance (and adjust the height of the tally sheet).
+At the end of an accounting period, you can enter the coffee consumption, where `coffeekitty` will then calculate the balance (and adjust the height of the tally sheet).
 
 ![coffeekitty print](img/coffeekitty_latex.png)
 
 Coffeekitty also tracks the number of packs of coffee in storage.
 
 
-## Dependenices
+## Dependencies
 
 Just `libxml2` and `pkg-config`. You will need `pdflatex` for the tally sheet.
 
@@ -59,7 +59,7 @@ Create a tally using
 coffeekitty latex > sheet.tex && pdflatex sheet.tex
 ```
 
-This can hung above your coffee machine. If a person drinks coffee, she indicates it by adding a tally.
+This can be hung above your coffee machine. If a person drinks coffee, she indicates it by adding a tally.
 
 
 ### Payment and Balance
@@ -82,7 +82,7 @@ The balance of the coffeekitty and the balance of the person are updated accordi
 
 ### Thirst
 
-When adding the drank coffees, they increate the counter of `current coffees` for a person.
+When adding the drank coffees, they increase the counter of `current coffees` for a person.
 By using `coffeekitty thirst` you can invoke a calculation of a thirst parameter, which is the amount of coffee consumed by this one person in the last period.
 The thirst parameter is used for the line-height calculation of the tally sheet.
 After `coffeekitty thirst` is called, the `current coffees` counter is reset.
@@ -115,5 +115,5 @@ If something goes wrong, you can modify the database located in `$HOME/.coffeeki
 
 ### (Current) Limitations
 
-Currently there is no wide char support (yet), be careful with diacritics and non-latin script!
+Currently, there is no wide char support (yet), be careful with diacritics and non-latin script!
 Also, no transaction log has been implemented yet, therefore there is no undo function.
