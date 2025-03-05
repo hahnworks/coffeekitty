@@ -93,6 +93,8 @@ int parse_command(int argc, char** argv, Kitty* kitty)
     return 1;
 }
 
+/* General */
+
 int command_print(int argc, char** argv, Kitty* kitty)
 {
     if (argc > 2) {
@@ -117,6 +119,8 @@ int command_help(int argc, char** argv, Kitty* kitty)
     print_commands(argv[0]);
     return 1;
 }
+
+/* Kitty management */
 
 int command_set(int argc, char** argv, Kitty* kitty)
 {
@@ -186,6 +190,143 @@ int command_set(int argc, char** argv, Kitty* kitty)
     return 0;
 }
 
+/* Transaction management */
+
+int command_drink(int argc, char** argv, Kitty* kitty)
+{
+    if (argc < 4) {
+        printf("Usage: %s drink <name> <amount>\n", argv[0]);
+        return 1;
+    }
+    Person *p = get_person_by_name(kitty->persons, argv[2]);
+    if (!p) {
+        printf("Person %s not found\n", argv[2]);
+        return 1;
+    }
+
+    int amount = atoi(argv[3]);
+    printf("%s drinks %i coffees\n", p->name, amount);
+
+    printf("=> %s's balance: %s -> ", p->name, format_currency_value(p->balance, true, true));
+    person_drinks_coffee(p, kitty, amount);
+    printf("%s\n", format_currency_value(p->balance, true, true));
+
+    printf("=> %s's Current Coffees: %i -> %i\n", p->name, p->current_coffees - amount, p->current_coffees);
+    return 0;
+}
+
+int command_buy(int argc, char** argv, Kitty* kitty)
+{
+    if (argc < 3) {
+        printf("Usage: %s buy <amount> <cost>\n", argv[0]);
+        return 1;
+    }
+
+    int amount = atoi(argv[2]);
+    Currency* currency = kitty->settings->currency;
+    CurrencyValue* cost = ftocv(atof(argv[3]), currency);
+
+    printf("Buying %i packs for %s\n", amount, format_currency_value(cost, false, true));
+
+    printf("=> Kitty balance: %s -> ", format_currency_value(kitty->balance, true, true));
+    buy_coffee(kitty, amount, cost);
+    printf("%s\n", format_currency_value(kitty->balance, true, true));
+
+    printf("=> Packs: %i -> %i\n", kitty->packs - amount, kitty->packs);
+
+    free_currency_value(cost);
+
+    return 0;
+}
+
+int command_pay(int argc, char** argv, Kitty* kitty)
+{
+    if (argc < 4) {
+        printf("Usage: %s pay <name> <amount>\n", argv[0]);
+        return 1;
+    }
+    Person *p = get_person_by_name(kitty->persons, argv[2]);
+    if (!p) {
+        printf("Person %s not found\n", argv[2]);
+        return 1;
+    }
+
+    Currency* currency = kitty->settings->currency;
+    CurrencyValue* payment = ftocv(atof(argv[3]), currency);
+
+    printf("%s pays %s\n", p->name, format_currency_value(payment, false, true));
+
+    printf("=> Balance: %s -> ", format_currency_value(p->balance, true, true));
+    person_pays_debt(p, kitty, payment);
+    printf("%s\n", format_currency_value(p->balance, true, true));
+
+    free_currency_value(payment);
+
+    return 0;
+}
+
+int command_reimbursement(int argc, char** argv, Kitty* kitty)
+{
+    if (argc < 3) {
+        printf("Usage: %s auslage <name> <amount>\n", argv[0]);
+        return 1;
+    }
+    Person *p = get_person_by_name(kitty->persons, argv[2]);
+    if (!p) {
+        printf("Person %s not found\n", argv[2]);
+        return 1;
+    }
+
+    Currency* currency = kitty->settings->currency;
+    CurrencyValue* cost = ftocv(atof(argv[3]), currency);
+    printf("%s buys something for %s\n", p->name, format_currency_value(cost, false, true));
+
+    printf("=> %s's balance: %s -> ", p->name, format_currency_value(p->balance, true, true));
+    person_buys_misc(p, cost);
+    printf("%s\n", format_currency_value(p->balance, true, true));
+    return 0;
+}
+
+int command_consume(int argc, char** argv, Kitty* kitty)
+{
+    (void)argc;
+    (void)argv;
+
+    if (kitty->packs == 0) {
+        printf("No packs left\n");
+        return 1;
+    }
+
+    printf("Pack consumed\n");
+    printf("=> Packs: %i -> ", kitty->packs);
+    consume_pack(kitty);
+    printf("%i\n", kitty->packs);
+
+    return 0;
+}
+
+/* Output */
+
+int command_latex(int argc, char** argv, Kitty* kitty)
+{
+    (void)argc;
+    (void)argv;
+    return fprint_new_latex_sheet(stdout, kitty);
+}
+
+int command_thirst(int argc, char** argv, Kitty* kitty)
+{
+    (void)argc;
+    (void)argv;
+    calculate_thirst(kitty->persons);
+
+    printf("Thirst calculated. Current coffees reset.\n");
+    return 0;
+}
+
+
+/* Person management */
+
 int command_add(int argc, char** argv, Kitty* kitty)
 {
     if (argc < 3) {
@@ -225,136 +366,6 @@ int command_remove(int argc, char** argv, Kitty* kitty)
         remove_person(&kitty->persons, person_to_remove);
         printf("Sucessfully removed person %s\n", person_to_remove->name);
     }
-
-    return 0;
-}
-
-int command_drink(int argc, char** argv, Kitty* kitty)
-{
-    if (argc < 4) {
-        printf("Usage: %s drink <name> <amount>\n", argv[0]);
-        return 1;
-    }
-    Person *p = get_person_by_name(kitty->persons, argv[2]);
-    if (!p) {
-        printf("Person %s not found\n", argv[2]);
-        return 1;
-    }
-
-    int amount = atoi(argv[3]);
-    printf("%s drinks %i coffees\n", p->name, amount);
-
-    printf("=> %s's balance: %s -> ", p->name, format_currency_value(p->balance, true, true));
-    person_drinks_coffee(p, kitty, amount);
-    printf("%s\n", format_currency_value(p->balance, true, true));
-
-    printf("=> %s's Current Coffees: %i -> %i\n", p->name, p->current_coffees - amount, p->current_coffees);
-    return 0;
-}
-
-int command_pay(int argc, char** argv, Kitty* kitty)
-{
-    if (argc < 4) {
-        printf("Usage: %s pay <name> <amount>\n", argv[0]);
-        return 1;
-    }
-    Person *p = get_person_by_name(kitty->persons, argv[2]);
-    if (!p) {
-        printf("Person %s not found\n", argv[2]);
-        return 1;
-    }
-
-    Currency* currency = kitty->settings->currency;
-    CurrencyValue* payment = ftocv(atof(argv[3]), currency);
-
-    printf("%s pays %s\n", p->name, format_currency_value(payment, false, true));
-
-    printf("=> Balance: %s -> ", format_currency_value(p->balance, true, true));
-    person_pays_debt(p, kitty, payment);
-    printf("%s\n", format_currency_value(p->balance, true, true));
-
-    free_currency_value(payment);
-
-    return 0;
-}
-
-int command_buy(int argc, char** argv, Kitty* kitty)
-{
-    if (argc < 3) {
-        printf("Usage: %s buy <amount> <cost>\n", argv[0]);
-        return 1;
-    }
-
-    int amount = atoi(argv[2]);
-    Currency* currency = kitty->settings->currency;
-    CurrencyValue* cost = ftocv(atof(argv[3]), currency);
-
-    printf("Buying %i packs for %s\n", amount, format_currency_value(cost, false, true));
-
-    printf("=> Kitty balance: %s -> ", format_currency_value(kitty->balance, true, true));
-    buy_coffee(kitty, amount, cost);
-    printf("%s\n", format_currency_value(kitty->balance, true, true));
-
-    printf("=> Packs: %i -> %i\n", kitty->packs - amount, kitty->packs);
-
-    free_currency_value(cost);
-
-    return 0;
-}
-
-int command_reimbursement(int argc, char** argv, Kitty* kitty)
-{
-    if (argc < 3) {
-        printf("Usage: %s auslage <name> <amount>\n", argv[0]);
-        return 1;
-    }
-    Person *p = get_person_by_name(kitty->persons, argv[2]);
-    if (!p) {
-        printf("Person %s not found\n", argv[2]);
-        return 1;
-    }
-
-    Currency* currency = kitty->settings->currency;
-    CurrencyValue* cost = ftocv(atof(argv[3]), currency);
-    printf("%s buys something for %s\n", p->name, format_currency_value(cost, false, true));
-
-    printf("=> %s's balance: %s -> ", p->name, format_currency_value(p->balance, true, true));
-    person_buys_misc(p, cost);
-    printf("%s\n", format_currency_value(p->balance, true, true));
-    return 0;
-}
-
-int command_latex(int argc, char** argv, Kitty* kitty)
-{
-    (void)argc;
-    (void)argv;
-    return fprint_new_latex_sheet(stdout, kitty);
-}
-
-int command_thirst(int argc, char** argv, Kitty* kitty)
-{
-    (void)argc;
-    (void)argv;
-    calculate_thirst(kitty->persons);
-
-    printf("Thirst calculated. Current coffees reset.\n");
-    return 0;
-}
-
-int command_consume(int argc, char** argv, Kitty* kitty)
-{
-    (void)argc;
-    (void)argv;
-
-    if (kitty->packs == 0) {
-        printf("No packs left\n");
-        return 1;
-    }
-
-    printf("Pack consumed\n");
-    printf("=> Packs: %i -> ", kitty->packs);
-    consume_pack(kitty);
-    printf("%i\n", kitty->packs);
 
     return 0;
 }

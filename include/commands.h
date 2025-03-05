@@ -27,18 +27,24 @@ typedef struct Command {
 } Command;
 
 void print_commands(char* argv0);
+
+// General
 int command_print(int argc, char** argv, Kitty* kitty);
 int command_help(int argc, char** argv, Kitty* kitty);
+// Kitty management
 int command_set(int argc, char** argv, Kitty* kitty);
-int command_add(int argc, char** argv, Kitty* kitty);
-int command_remove(int argc, char** argv, Kitty* kitty);
+// Transaction management
 int command_drink(int argc, char** argv, Kitty* kitty);
-int command_pay(int argc, char** argv, Kitty* kitty);
 int command_buy(int argc, char** argv, Kitty* kitty);
-int command_latex(int argc, char** argv, Kitty* kitty);
-int command_thirst(int argc, char** argv, Kitty* kitty);
+int command_pay(int argc, char** argv, Kitty* kitty);
 int command_reimbursement(int argc, char** argv, Kitty* kitty);
 int command_consume(int argc, char** argv, Kitty* kitty);
+// Output management
+int command_latex(int argc, char** argv, Kitty* kitty);
+int command_thirst(int argc, char** argv, Kitty* kitty);
+// Person management
+int command_add(int argc, char** argv, Kitty* kitty);
+int command_remove(int argc, char** argv, Kitty* kitty);
 
 
 int parse_command(int argc, char** argv, Kitty* kitty);
