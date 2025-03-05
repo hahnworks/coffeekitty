@@ -115,5 +115,4 @@ If something goes wrong, you can modify the database located in `$HOME/.coffeeki
 
 ### (Current) Limitations
 
-There is no wide char support (yet), be careful with diacritics and non-latin script!
-Also, no transaction log has been implemented yet, therefore there is no undo function.
+No transaction log has been implemented yet, therefore there is no undo function.

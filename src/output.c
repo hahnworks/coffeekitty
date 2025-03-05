@@ -63,6 +63,22 @@ void fprint_hline(FILE* file, int width)
     fprintf(file, "\n");
 }
 
+int utf8_strlen(const char* s)
+{
+    int len = 0;
+    for (int i = 0; s[i]; i++) {
+        if ((s[i] & 0xC0) != 0x80) {
+            len++;
+        }
+    }
+    return len;
+}
+
+int excess_bytes(const char* str)
+{
+    return strlen(str) - utf8_strlen(str);
+}
+
 void fprint_output(FILE* file, Kitty* kitty)
 {
     // Determine widths
@@ -72,7 +88,7 @@ void fprint_output(FILE* file, Kitty* kitty)
     int total_counter_width = strlen("Total");
     int thirst_width = strlen("Thirst");
     for (Person* p = kitty->persons; p; p = p->next) {
-        int this_name_width = strlen(p->name);
+        int this_name_width = utf8_strlen(p->name);
         int this_balance_width = strlen(format_currency_value(p->balance, false, true));
         int this_current_counter_width = snprintf(NULL, 0, "%i", p->current_coffees);
         int this_total_counter_width = snprintf(NULL, 0, "%i", p->total_coffees);
@@ -93,7 +109,7 @@ void fprint_output(FILE* file, Kitty* kitty)
     fprint_hline(file, total_width);
     for (Person* p = kitty->persons; p; p = p->next) {
         fprintf(file, "%-*s | %s%*s%s | %*i / %*i | %-*f\n",
-            name_width, p->name,
+            name_width + excess_bytes(p->name), p->name,
             format_currency_value_color_prefix(p->balance),
             balance_width, format_currency_value(p->balance, false, true),
             format_currency_value_color_suffix(p->balance),
