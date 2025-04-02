@@ -22,6 +22,32 @@
 #include "currency.h"
 #include "kitty.h"
 
+enum transaction_type {
+    PERSON_PAYS_DEBT,
+    PERSON_BUYS_MISC,
+    PERSON_DRINKS_COFFEE,
+    KITTY_BUY_COFFEE,
+    KITTY_CONSUME_PACK
+};
+
+enum balance_delta_target {
+    PERSON,
+    KITTY
+};
+
+typedef struct BalanceDelta {
+    CurrencyValue* delta;
+    enum balance_delta_target target;
+    struct BalanceDelta* next;
+} BalanceDelta;
+
+typedef struct Transaction {
+    enum transaction_type type;
+    BalanceDelta* delta_head;
+    struct Transaction* next;
+} Transaction;
+
+
 void person_pays_debt(Person* person, Kitty* kitty, CurrencyValue* payment);
 void person_buys_misc(Person* person, CurrencyValue* cost);
 void person_drinks_coffee(Person* person, Kitty* kitty, int amount);
