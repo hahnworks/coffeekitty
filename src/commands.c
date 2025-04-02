@@ -125,14 +125,14 @@ int command_help(int argc, char** argv, Kitty* kitty)
 int command_set(int argc, char** argv, Kitty* kitty)
 {
     if (argc < 3) {
-        printf("Usage: %s set <option> <value>\n", argv[0]);
+        printf("Usage: %s %s <option> <value>\n", argv[0], argv[1]);
         printf("Available options are:\n\tprice\n\tbalance\n\tpacks\n\tcurrency\n\tprefix_currency_value\n");
         return 1;
     }
 
     if (strcmp(argv[2], "price") == 0) {
         if (argc < 4) {
-            printf("Usage: %s set price <value>\n", argv[0]);
+            printf("Usage: %s %s price <value>\n", argv[0], argv[1]);
             return 1;
         }
         Currency* currency = kitty->settings->currency;
@@ -142,7 +142,7 @@ int command_set(int argc, char** argv, Kitty* kitty)
         printf("Price set to %s\n", format_currency_value(price, false, true));
     } else if (strcmp(argv[2], "balance") == 0) {
         if (argc < 4) {
-            printf("Usage: %s set balance <value>\n", argv[0]);
+            printf("Usage: %s %s balance <value>\n", argv[0], argv[1]);
             return 1;
         }
         Currency* currency = kitty->settings->currency;
@@ -152,14 +152,14 @@ int command_set(int argc, char** argv, Kitty* kitty)
         printf("Balance set to %s\n", format_currency_value(balance, true, true));
     } else if (strcmp(argv[2], "packs") == 0) {
         if (argc < 4) {
-            printf("Usage: %s set packs <value>\n", argv[0]);
+            printf("Usage: %s %s packs <value>\n", argv[0], argv[1]);
             return 1;
         }
         kitty->packs = atoi(argv[3]);
         printf("Packs set to %i\n", kitty->packs);
     } else if (strcmp(argv[2], "currency") == 0) {
         if (argc < 4) {
-            printf("Usage: %s set currency <currency>\n", argv[0]);
+            printf("Usage: %s %s currency <currency>\n", argv[0], argv[1]);
             return 1;
         }
         char* isoname = kitty->settings->currency->isoname;
@@ -168,7 +168,7 @@ int command_set(int argc, char** argv, Kitty* kitty)
         printf("Currency set to %s\n", isoname);
     } else if (strcmp(argv[2], "prefix_currency_value") == 0) {
         if (argc < 4) {
-            printf("Usage: %s set prefix_currency_value <true|false>\n", argv[0]);
+            printf("Usage: %s %s prefix_currency_value <true|false>\n", argv[0], argv[1]);
             return 1;
         }
 
@@ -195,7 +195,7 @@ int command_set(int argc, char** argv, Kitty* kitty)
 int command_drink(int argc, char** argv, Kitty* kitty)
 {
     if (argc < 4) {
-        printf("Usage: %s drink <name> <amount>\n", argv[0]);
+        printf("Usage: %s %s <name> <amount>\n", argv[0], argv[1]);
         return 1;
     }
     Person *p = get_person_by_name(kitty->persons, argv[2]);
@@ -218,7 +218,7 @@ int command_drink(int argc, char** argv, Kitty* kitty)
 int command_buy(int argc, char** argv, Kitty* kitty)
 {
     if (argc < 3) {
-        printf("Usage: %s buy <amount> <cost>\n", argv[0]);
+        printf("Usage: %s %s <amount> <cost>\n", argv[0], argv[1]);
         return 1;
     }
 
@@ -242,7 +242,7 @@ int command_buy(int argc, char** argv, Kitty* kitty)
 int command_pay(int argc, char** argv, Kitty* kitty)
 {
     if (argc < 4) {
-        printf("Usage: %s pay <name> <amount>\n", argv[0]);
+        printf("Usage: %s %s <name> <amount>\n", argv[0], argv[1]);
         return 1;
     }
     Person *p = get_person_by_name(kitty->persons, argv[2]);
@@ -268,7 +268,7 @@ int command_pay(int argc, char** argv, Kitty* kitty)
 int command_reimbursement(int argc, char** argv, Kitty* kitty)
 {
     if (argc < 3) {
-        printf("Usage: %s auslage <name> <amount>\n", argv[0]);
+        printf("Usage: %s %s <name> <amount>\n", argv[0], argv[1]);
         return 1;
     }
     Person *p = get_person_by_name(kitty->persons, argv[2]);
@@ -330,7 +330,7 @@ int command_thirst(int argc, char** argv, Kitty* kitty)
 int command_add(int argc, char** argv, Kitty* kitty)
 {
     if (argc < 3) {
-        printf("Usage: %s add <name>\n", argv[0]);
+        printf("Usage: %s %s <name>\n", argv[0], argv[1]);
         return 1;
     }
 
@@ -353,7 +353,7 @@ int command_add(int argc, char** argv, Kitty* kitty)
 int command_remove(int argc, char** argv, Kitty* kitty)
 {
     if (argc < 3) {
-        printf("Usage: %s remove <name>\n", argv[0]);
+        printf("Usage: %s %s <name>\n", argv[0], argv[1]);
         return 1;
     }
 
