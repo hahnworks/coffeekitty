@@ -205,13 +205,7 @@ int command_drink(int argc, char** argv, Kitty* kitty)
     }
 
     int amount = atoi(argv[3]);
-    printf("%s drinks %i coffees\n", p->name, amount);
-
-    printf("=> %s's balance: %s -> ", p->name, format_currency_value(p->balance, true, true));
     person_drinks_coffee(kitty, p, amount);
-    printf("%s\n", format_currency_value(p->balance, true, true));
-
-    printf("=> %s's Current Coffees: %i -> %i\n", p->name, p->current_coffees - amount, p->current_coffees);
     return 0;
 }
 
@@ -226,13 +220,7 @@ int command_buy(int argc, char** argv, Kitty* kitty)
     Currency* currency = kitty->settings->currency;
     CurrencyValue* cost = ftocv(atof(argv[3]), currency);
 
-    printf("Buying %i packs for %s\n", amount, format_currency_value(cost, false, true));
-
-    printf("=> Kitty balance: %s -> ", format_currency_value(kitty->balance, true, true));
     buy_coffee(kitty, amount, cost);
-    printf("%s\n", format_currency_value(kitty->balance, true, true));
-
-    printf("=> Packs: %i -> %i\n", kitty->packs - amount, kitty->packs);
 
     free_currency_value(cost);
 
@@ -254,11 +242,7 @@ int command_pay(int argc, char** argv, Kitty* kitty)
     Currency* currency = kitty->settings->currency;
     CurrencyValue* payment = ftocv(atof(argv[3]), currency);
 
-    printf("%s pays %s\n", p->name, format_currency_value(payment, false, true));
-
-    printf("=> Balance: %s -> ", format_currency_value(p->balance, true, true));
     person_pays_debt(kitty,p, payment);
-    printf("%s\n", format_currency_value(p->balance, true, true));
 
     free_currency_value(payment);
 
@@ -279,11 +263,9 @@ int command_reimbursement(int argc, char** argv, Kitty* kitty)
 
     Currency* currency = kitty->settings->currency;
     CurrencyValue* cost = ftocv(atof(argv[3]), currency);
-    printf("%s buys something for %s\n", p->name, format_currency_value(cost, false, true));
-
-    printf("=> %s's balance: %s -> ", p->name, format_currency_value(p->balance, true, true));
+    
     person_buys_misc(kitty, p, cost);
-    printf("%s\n", format_currency_value(p->balance, true, true));
+
     return 0;
 }
 
@@ -296,12 +278,7 @@ int command_consume(int argc, char** argv, Kitty* kitty)
         printf("No packs left\n");
         return 1;
     }
-
-    printf("Pack consumed\n");
-    printf("=> Packs: %i -> ", kitty->packs);
     consume_pack(kitty);
-    printf("%i\n", kitty->packs);
-
     return 0;
 }
 

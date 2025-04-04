@@ -22,6 +22,7 @@
 #include "person.h"
 #include "currency.h"
 #include "kitty.h"
+#include "output.h"
 
 BalanceDelta* create_balance_delta(CurrencyValue* cv, Person* target)
 {
@@ -169,6 +170,8 @@ void free_transaction(Transaction* t)
 }
 
 void apply_transaction(Kitty* k, Transaction* t){
+    fprint_transaction(stdout, k, t, false);
+
     for(BalanceDelta* bd = t->balance_delta_head; bd; bd = bd->next) {
         if (bd->target) {
             add_to_currency_value(bd->target->balance, bd->cv);
