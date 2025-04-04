@@ -45,6 +45,7 @@ int command_thirst(int argc, char** argv, Kitty* kitty);
 // Person management
 int command_add(int argc, char** argv, Kitty* kitty);
 int command_remove(int argc, char** argv, Kitty* kitty);
+int command_rename(int argc, char** argv, Kitty* kitty);
 
 
 int parse_command(int argc, char** argv, Kitty* kitty);

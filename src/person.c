@@ -105,6 +105,20 @@ void remove_person(Person **head, Person *person_to_remove)
     return;
 }
 
+Person* rename_person(Person* persons, Person *person, char *new_name)
+{
+    if (get_person_by_name(persons, new_name)){
+        return NULL;
+    }
+
+    free(person->name);
+    person->name_length = strlen(new_name);
+    person->name = malloc(person->name_length + 1);
+    strcpy(person->name, new_name);
+
+    return person;
+}
+
 Person *get_person_by_name(Person *persons, char *name)
 {
     Person *p = persons;

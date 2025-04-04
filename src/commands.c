@@ -52,6 +52,7 @@ const Command commands[] = {
     {"#", NULL, "  Person management:"},
     {"add", command_add, "Add a person"},
     {"remove", command_remove, "Remove a person"},
+    {"rename", command_rename, "Rename a person"},
 
     {NULL, NULL, NULL}
 };
@@ -366,6 +367,28 @@ int command_remove(int argc, char** argv, Kitty* kitty)
         remove_person(&kitty->persons, person_to_remove);
         printf("Sucessfully removed person %s\n", person_to_remove->name);
     }
+
+    return 0;
+}
+
+int command_rename(int argc, char** argv, Kitty* kitty)
+{
+    if (argc < 4) {
+        printf("Usage: %s %s <old_name> <new_name>\n", argv[0], argv[1]);
+        return 1;
+    }
+
+    Person* person_to_rename = get_person_by_name(kitty->persons, argv[2]);
+    if (!person_to_rename) {
+        printf("Person to rename %s not found\n", argv[2]);
+        return 1;
+    }
+
+    if (rename_person( kitty->persons, person_to_rename, argv[3]))
+        printf("Sucessfully renamed person %s to %s\n", argv[2], argv[3]);
+    else
+        printf("Failed to rename person %s to %s\n", argv[2], argv[3]);
+
 
     return 0;
 }

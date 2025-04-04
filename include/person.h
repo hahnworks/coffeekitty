@@ -38,6 +38,7 @@ void free_person(Person *p);
 void free_persons(Person *persons);
 Person* add_person(Person **head, Person *person);
 void remove_person(Person **head, Person *person_to_remove);
+Person* rename_person(Person *persons, Person *person, char *new_name);
 Person *get_person_by_name(Person *persons, char *name);
 void sort_persons_by_name(Person **head);
 int get_person_count(Person *persons);
