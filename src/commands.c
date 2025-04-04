@@ -208,7 +208,7 @@ int command_drink(int argc, char** argv, Kitty* kitty)
     printf("%s drinks %i coffees\n", p->name, amount);
 
     printf("=> %s's balance: %s -> ", p->name, format_currency_value(p->balance, true, true));
-    person_drinks_coffee(p, kitty, amount);
+    person_drinks_coffee(kitty, p, amount);
     printf("%s\n", format_currency_value(p->balance, true, true));
 
     printf("=> %s's Current Coffees: %i -> %i\n", p->name, p->current_coffees - amount, p->current_coffees);
@@ -257,7 +257,7 @@ int command_pay(int argc, char** argv, Kitty* kitty)
     printf("%s pays %s\n", p->name, format_currency_value(payment, false, true));
 
     printf("=> Balance: %s -> ", format_currency_value(p->balance, true, true));
-    person_pays_debt(p, kitty, payment);
+    person_pays_debt(kitty,p, payment);
     printf("%s\n", format_currency_value(p->balance, true, true));
 
     free_currency_value(payment);
@@ -282,7 +282,7 @@ int command_reimbursement(int argc, char** argv, Kitty* kitty)
     printf("%s buys something for %s\n", p->name, format_currency_value(cost, false, true));
 
     printf("=> %s's balance: %s -> ", p->name, format_currency_value(p->balance, true, true));
-    person_buys_misc(p, cost);
+    person_buys_misc(kitty, p, cost);
     printf("%s\n", format_currency_value(p->balance, true, true));
     return 0;
 }
