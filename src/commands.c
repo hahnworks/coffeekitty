@@ -59,7 +59,7 @@ const Command commands[] = {
 
 void print_commands(char* argv0)
 {
-    printf("Usage: %s [operation] <options...>\n", argv0);
+    printf("Usage: %s <operation> [options...]\n", argv0);
     printf("Operations:\n");
     for (int cptr = 0; commands[cptr].name; cptr++) {
         const Command* c = &commands[cptr];
