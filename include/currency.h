@@ -47,5 +47,7 @@ void add_to_currency_value(CurrencyValue *cv1, CurrencyValue *cv2);
 void sub_from_currency_value(CurrencyValue *cv1, CurrencyValue *cv2);
 void mul_currency_value(CurrencyValue *cv, int factor);
 void div_currency_value(CurrencyValue *cv, int divisor);
+void negative_currency_value(CurrencyValue *cv);
+CurrencyValue* new_negative_currency_value(CurrencyValue *cv);
 
 #endif
