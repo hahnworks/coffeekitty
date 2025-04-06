@@ -24,6 +24,7 @@
 #include "kitty.h"
 #include "storage.h"
 #include "commands.h"
+#include "transactions.h"
 
 void clean_exit(int rval, Kitty* kitty, bool save)
 {
@@ -63,7 +64,8 @@ int main(int argc, char **argv)
 
         Settings *settings = create_settings(create_currency("EUR", false, 2, '.'));
         Person *persons = NULL;
-        Kitty *kitty = create_kitty(0, 25, 0, 0, settings, persons);
+        Transaction* transactions = NULL;
+        Kitty *kitty = create_kitty(0, 25, 0, 0, settings, persons, transactions);
         if (mkdir_p(get_config_directory())) {
             fprintf(stderr, "Failed to create directory\n");
             clean_exit(1, kitty, false);

@@ -105,9 +105,9 @@ void remove_person(Person **head, Person *person_to_remove)
     return;
 }
 
-Person *get_person_by_name(Person *persons, char *name)
+Person *get_person_by_name(const Person *persons, char *name)
 {
-    Person *p = persons;
+    const Person *p = persons;
     while (p) {
         if (strcmp(p->name, name) == 0) {
             return p;
