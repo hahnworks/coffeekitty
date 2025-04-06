@@ -21,8 +21,6 @@
 
 #include "person.h"
 #include "currency.h"
-#include "kitty.h"
-#include "output.h"
 
 BalanceDelta* create_balance_delta(CurrencyValue* cv, Person* target)
 {
