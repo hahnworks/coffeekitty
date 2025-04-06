@@ -27,7 +27,7 @@
 #include "settings.h"
 
 #include "output.h"
-#include "transactions.h"
+#include "operations.h"
 #include "latex.h"
 
 const Command commands[] = {

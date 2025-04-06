@@ -20,7 +20,6 @@
 
 #include "person.h"
 #include "currency.h"
-#include "kitty.h"
 
 enum transaction_type {
     PERSON_PAYS_DEBT = 0,
@@ -55,12 +54,24 @@ typedef struct Transaction {
     struct Transaction* next;
 } Transaction;
 
-void person_pays_debt(Kitty* kitty, Person* person,  CurrencyValue* payment);
-void person_buys_misc(Kitty* kitty, Person* person, CurrencyValue* cost);
-void person_drinks_coffee(Kitty* kitty, Person* person, int amount);
-void buy_coffee(Kitty* kitty, int amount, CurrencyValue* cost);
-void consume_pack(Kitty* kitty);
+BalanceDelta* create_balance_delta(CurrencyValue* cv, Person* target);
+BalanceDelta* add_balance_delta(BalanceDelta** head, BalanceDelta* delta);
+void free_balance_delta(BalanceDelta* delta);
+void free_balance_deltas(BalanceDelta* head);
 
-void calculate_thirst(Person* person);
+PacksDelta* create_packs_delta(int packs);
+PacksDelta* add_packs_delta(PacksDelta** head, PacksDelta* delta);
+void free_packs_delta(PacksDelta* delta);
+void free_packs_deltas(PacksDelta* head);
+
+CounterDelta* create_counter_delta(int counter, Person* target);
+CounterDelta* add_counter_delta(CounterDelta** head, CounterDelta* delta);
+void free_counter_delta(CounterDelta* delta);
+void free_counter_deltas(CounterDelta* head);
+
+Transaction* create_transaction(enum transaction_type type);
+Transaction* add_transaction(Transaction** head, Transaction* t);
+void free_transaction(Transaction* t);
+void free_transactions(Transaction* head);
 
 #endif

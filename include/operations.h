@@ -15,27 +15,23 @@
  * along with this program. If not, see <https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12>.
  */
 
-#ifndef KITTY_H
-#define KITTY_H
 
-#include "settings.h"
-#include "currency.h"
+#ifndef OPERATIONS_H
+#define OPERATIONS_H
+
 #include "person.h"
+#include "currency.h"
+#include "kitty.h"
 #include "transactions.h"
 
-typedef struct Kitty{
-    CurrencyValue *balance;
-    CurrencyValue *price;
+void person_pays_debt(Kitty* kitty, Person* person,  CurrencyValue* payment);
+void person_buys_misc(Kitty* kitty, Person* person, CurrencyValue* cost);
+void person_drinks_coffee(Kitty* kitty, Person* person, int amount);
+void buy_coffee(Kitty* kitty, int amount, CurrencyValue* cost);
+void consume_pack(Kitty* kitty);
 
-    int packs;
-    int counter;
+void calculate_thirst(Person* person);
 
-    Person *persons;
-    Settings *settings;
-    Transaction *transactions;
-} Kitty;
-
-Kitty *create_kitty(int balance, int price, int packs, int counter, Settings* settings, Person* persons);
-void free_kitty(Kitty *k);
+void apply_transaction(Kitty *kitty, Transaction *t);
 
 #endif
