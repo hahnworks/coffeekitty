@@ -45,6 +45,9 @@ void clean_exit(int rval, Kitty* kitty, bool save)
             }
             free_settings(kitty->settings);
         }
+        if (kitty->transactions) {
+            free_transactions(kitty->transactions);
+        }
         free_kitty(kitty);
     }
 

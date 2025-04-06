@@ -21,6 +21,7 @@
 #include "settings.h"
 #include "currency.h"
 #include "person.h"
+#include "transactions.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -294,10 +295,108 @@ xmlNodePtr create_person_node(xmlNodePtr parent, const Person* person)
 xmlNodePtr create_persons_node(xmlNodePtr parent, const Person* persons)
 {
     xmlNodePtr persons_node = xmlNewChild(parent, NULL, (const xmlChar*) "persons", NULL);
-    for (const Person *p = persons; p != NULL; p = p->next) {
+    for (const Person *p = persons; p; p = p->next) {
         create_person_node(persons_node, p);
     }
     return persons_node;
+}
+
+xmlNodePtr create_balance_delta_node(xmlNodePtr parent, const BalanceDelta* delta)
+{
+    xmlNodePtr delta_node = xmlNewChild(parent, NULL, (const xmlChar*) "balance_delta", NULL);
+    char buffer[20];
+    if (delta->target) {
+        xmlNewProp(delta_node, (const xmlChar*) "target", (const xmlChar*) delta->target->name);
+    } // else, target will be not set
+    snprintf(buffer, sizeof(buffer), "%i", delta->cv->value);
+    xmlNewProp(delta_node, (const xmlChar*) "value", (const xmlChar*) buffer);
+
+    return delta_node;
+}
+
+xmlNodePtr create_balance_deltas_node(xmlNodePtr parent, const BalanceDelta* delta)
+{
+    if (!delta) {
+        return NULL;
+    }
+    xmlNodePtr balance_deltas_node = xmlNewChild(parent, NULL, (const xmlChar*) "balance_deltas", NULL);
+    for(const BalanceDelta *b = delta; b; b = b->next) {
+        create_balance_delta_node(balance_deltas_node, b);
+    }
+
+    return balance_deltas_node;
+}
+
+xmlNodePtr create_packs_delta_node(xmlNodePtr parent, const PacksDelta* delta)
+{
+    xmlNodePtr delta_node = xmlNewChild(parent, NULL, (const xmlChar*) "packs_delta", NULL);
+    char buffer[20];
+    snprintf(buffer, sizeof(buffer), "%i", delta->packs);
+    xmlNewProp(delta_node, (const xmlChar*) "value", (const xmlChar*) buffer);
+
+    return delta_node;
+}
+
+xmlNodePtr create_packs_deltas_node(xmlNodePtr parent, const PacksDelta* delta)
+{
+    if (!delta) {
+        return NULL;
+    }
+    xmlNodePtr packs_deltas_node = xmlNewChild(parent, NULL, (const xmlChar*) "packs_deltas", NULL);
+    for(const PacksDelta *p = delta; p; p = p->next) {
+        create_packs_delta_node(packs_deltas_node, p);
+    }
+
+    return packs_deltas_node;
+}
+
+xmlNodePtr create_counter_delta_node(xmlNodePtr parent, const CounterDelta* delta)
+{
+    xmlNodePtr delta_node = xmlNewChild(parent, NULL, (const xmlChar*) "counter_delta", NULL);
+    char buffer[20];
+    if (delta->target) {
+        xmlNewProp(delta_node, (const xmlChar*) "target", (const xmlChar*) delta->target->name);
+    } // else, target will be not set
+    snprintf(buffer, sizeof(buffer), "%i", delta->counter);
+    xmlNewProp(delta_node, (const xmlChar*) "value", (const xmlChar*) buffer);
+
+    return delta_node;
+}
+
+xmlNodePtr create_counter_deltas_node(xmlNodePtr parent, const CounterDelta* delta)
+{
+    if (!delta) {
+        return NULL;
+    }
+    xmlNodePtr counter_deltas_node = xmlNewChild(parent, NULL, (const xmlChar*) "counter_deltas", NULL);
+    for(const CounterDelta *c = delta; c; c = c->next) {
+        create_counter_delta_node(counter_deltas_node, c);
+    }
+
+    return counter_deltas_node;
+}
+
+xmlNodePtr create_transaction_node(xmlNodePtr parent, const Transaction* transaction)
+{
+    xmlNodePtr transaction_node = xmlNewChild(parent, NULL, (const xmlChar*) "transaction", NULL);
+    char buffer[20];
+    snprintf(buffer, sizeof(buffer), "%i", transaction->type);
+    xmlNewProp(transaction_node, (const xmlChar*) "type", (const xmlChar*) buffer);
+    create_balance_deltas_node(transaction_node, transaction->balance_delta_head);
+    create_packs_deltas_node(transaction_node, transaction->packs_delta_head);
+    create_counter_deltas_node(transaction_node, transaction->counter_delta_head);
+
+    return transaction_node;
+}
+
+xmlNodePtr create_transactions_node(xmlNodePtr parent, const Transaction* transactions)
+{
+    xmlNodePtr transactions_node = xmlNewChild(parent, NULL, (const xmlChar*) "transactions", NULL);
+    for (const Transaction *t = transactions; t; t = t->next) {
+        create_transaction_node(transactions_node, t);
+    }
+
+    return transactions_node;
 }
 
 int save_kitty_to_xml(const char* path, const Kitty* kitty)
@@ -317,6 +416,7 @@ int save_kitty_to_xml(const char* path, const Kitty* kitty)
     create_settings_node(root, kitty->settings);
     create_kitty_node(root, kitty);
     create_persons_node(root, kitty->persons);
+    create_transactions_node(root, kitty->transactions);
 
     xmlSaveFormatFileEnc(path, doc, "UTF-8", 1);
     xmlFreeDoc(doc);
