@@ -48,6 +48,7 @@ typedef struct CounterDelta {
 
 typedef struct Transaction {
     enum transaction_type type;
+    long timestamp;
     BalanceDelta* balance_delta_head;
     PacksDelta* packs_delta_head;
     CounterDelta* counter_delta_head;
@@ -69,7 +70,7 @@ CounterDelta* add_counter_delta(CounterDelta** head, CounterDelta* delta);
 void free_counter_delta(CounterDelta* delta);
 void free_counter_deltas(CounterDelta* head);
 
-Transaction* create_transaction(enum transaction_type type);
+Transaction* create_transaction(enum transaction_type type, long timestamp);
 Transaction* add_transaction(Transaction** head, Transaction* t);
 Transaction* pop_transaction(Transaction** head);
 void free_transaction(Transaction* t);

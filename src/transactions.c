@@ -19,6 +19,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "person.h"
 #include "currency.h"
@@ -137,14 +138,19 @@ void free_counter_deltas(CounterDelta* head)
     }
 }
 
-Transaction* create_transaction(enum transaction_type type)
+Transaction* create_transaction(enum transaction_type type, long timestamp)
 {
     Transaction* t = malloc(sizeof(Transaction));
     t->type = type;
+    t->timestamp = timestamp;
     t->balance_delta_head = NULL;
     t->counter_delta_head = NULL;
     t->packs_delta_head = NULL;
     t->next = NULL;
+
+    if (timestamp == -1)
+        t->timestamp = time(NULL);
+
     return t;
 }
 
@@ -205,7 +211,7 @@ void free_transactions(Transaction* head)
 
 Transaction* invert_transaction(Transaction* transaction)
 {
-    Transaction* inverted = create_transaction(transaction->type);
+    Transaction* inverted = create_transaction(transaction->type, -1);
 
     for (BalanceDelta* bd = transaction->balance_delta_head; bd; bd = bd->next) {
         CurrencyValue* cv = new_negative_currency_value(bd->cv);

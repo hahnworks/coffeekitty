@@ -119,7 +119,14 @@ Transaction* parse_transaction(const xmlNode* transaction_node, const Person* pe
 {
     xmlChar* type_string = xmlGetProp(transaction_node, (const xmlChar*) "type");
     enum transaction_type type = atoi((char*) type_string);
-    Transaction* transaction = create_transaction(type);
+    xmlChar* timestamp_string = xmlGetProp(transaction_node, (const xmlChar*) "timestamp");
+    long timestamp;
+    if (!timestamp_string)
+        timestamp = 0;
+    else
+        timestamp = atol((char*) timestamp_string);
+
+    Transaction* transaction = create_transaction(type, timestamp);
 
     xmlNode *balance_deltas_node = NULL,
     *packs_deltas_node = NULL,
@@ -513,6 +520,8 @@ xmlNodePtr create_transaction_node(xmlNodePtr parent, const Transaction* transac
     char buffer[20];
     snprintf(buffer, sizeof(buffer), "%i", transaction->type);
     xmlNewProp(transaction_node, (const xmlChar*) "type", (const xmlChar*) buffer);
+    snprintf(buffer, sizeof(buffer), "%li", transaction->timestamp);
+    xmlNewProp(transaction_node, (const xmlChar*) "timestamp", (const xmlChar*) buffer);
     create_balance_deltas_node(transaction_node, transaction->balance_delta_head);
     create_packs_deltas_node(transaction_node, transaction->packs_delta_head);
     create_counter_deltas_node(transaction_node, transaction->counter_delta_head);
