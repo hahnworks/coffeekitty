@@ -44,6 +44,7 @@ const Command commands[] = {
     {"pay", command_pay, "(Person) Pay(s) debt"},
     {"reimbursement", command_reimbursement, "(Person) Buy(s) something for the kitty"},
     {"consume", command_consume, "Consume a pack"},
+    {"undo", command_undo, "Undo last transaction"},
 
     {"#", NULL, "  Output management:"},
     {"latex", command_latex, "Print latex sheet"},
@@ -301,6 +302,23 @@ int command_thirst(int argc, char** argv, Kitty* kitty)
     return 0;
 }
 
+int command_undo(int argc, char** argv, Kitty* kitty)
+{
+    (void)argc;
+    (void)argv;
+
+    if (!kitty->transactions) {
+        printf("No transactions to undo.\n");
+        return 1;
+    }
+    
+    Transaction* last_transaction;
+    for (last_transaction = kitty->transactions; last_transaction->next; last_transaction = last_transaction->next);
+
+    revert_transaction(kitty, last_transaction);
+    printf("Last transaction undone.\n");
+    return 0;
+}
 
 /* Person management */
 

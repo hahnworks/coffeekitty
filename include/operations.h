@@ -33,5 +33,6 @@ void consume_pack(Kitty* kitty);
 void calculate_thirst(Person* person);
 
 void apply_transaction(Kitty *kitty, Transaction *t);
+void revert_transaction(Kitty *kitty, Transaction *t);
 
 #endif

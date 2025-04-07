@@ -71,7 +71,10 @@ void free_counter_deltas(CounterDelta* head);
 
 Transaction* create_transaction(enum transaction_type type);
 Transaction* add_transaction(Transaction** head, Transaction* t);
+Transaction* pop_transaction(Transaction** head);
 void free_transaction(Transaction* t);
 void free_transactions(Transaction* head);
+
+Transaction* invert_transaction(Transaction* transaction);
 
 #endif

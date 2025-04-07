@@ -18,6 +18,7 @@
 #include "transactions.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "person.h"
 #include "currency.h"
@@ -161,6 +162,31 @@ Transaction* add_transaction(Transaction** head, Transaction* transaction)
     return transaction;
 }
 
+Transaction* pop_transaction(Transaction** head)
+{
+    if (!*head) // no transactions
+        return NULL;
+
+    if (!(*head)->next) { // only one transaction
+        Transaction* t = *head;
+        *head = NULL;
+        return t;
+    }
+
+    Transaction *lt;
+    Transaction *oblt;
+
+    oblt = *head;
+    lt = oblt->next;
+    while (lt->next) { // while lt is not last (otherwise lt->next == NULL)
+        oblt = oblt->next;
+        lt = oblt->next;
+    }
+
+    oblt->next = NULL;
+    return lt;
+}
+
 void free_transaction(Transaction* t)
 {
     free_balance_deltas(t->balance_delta_head);
@@ -175,4 +201,22 @@ void free_transactions(Transaction* head)
         free_transaction(t);
         t = next;
     }
+}
+
+Transaction* invert_transaction(Transaction* transaction)
+{
+    Transaction* inverted = create_transaction(transaction->type);
+
+    for (BalanceDelta* bd = transaction->balance_delta_head; bd; bd = bd->next) {
+        CurrencyValue* cv = new_negative_currency_value(bd->cv);
+        add_balance_delta(&inverted->balance_delta_head, create_balance_delta(cv, bd->target));
+    }
+    for (PacksDelta* pd = transaction->packs_delta_head; pd; pd = pd->next) {
+        add_packs_delta(&inverted->packs_delta_head, create_packs_delta(-pd->packs));
+    }
+    for (CounterDelta* cd = transaction->counter_delta_head; cd; cd = cd->next) {
+        add_counter_delta(&inverted->counter_delta_head, create_counter_delta(-cd->counter, cd->target));
+    }
+
+    return inverted;
 }

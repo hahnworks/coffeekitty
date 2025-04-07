@@ -30,14 +30,18 @@ void person_pays_debt(Kitty* kitty, Person* person, CurrencyValue* payment)
     Transaction* t = create_transaction(PERSON_PAYS_DEBT);
     add_balance_delta(&t->balance_delta_head, create_balance_delta(copy_currency_value(payment), person));
     add_balance_delta(&t->balance_delta_head, create_balance_delta(copy_currency_value(payment), NULL));
+
     apply_transaction(kitty, t);
+    add_transaction(&kitty->transactions, t);
 }
 
 void person_buys_misc(Kitty* kitty, Person* person, CurrencyValue* cost)
 {
     Transaction* t = create_transaction(PERSON_BUYS_MISC);
     add_balance_delta(&t->balance_delta_head, create_balance_delta(copy_currency_value(cost), person));
+
     apply_transaction(kitty, t);
+    add_transaction(&kitty->transactions, t);
 }
 
 void person_drinks_coffee(Kitty* kitty, Person* person, int amount)
@@ -54,6 +58,7 @@ void person_drinks_coffee(Kitty* kitty, Person* person, int amount)
     add_balance_delta(&t->balance_delta_head, create_balance_delta(delta_cv, person));
 
     apply_transaction(kitty, t);
+    add_transaction(&kitty->transactions, t);
 }
 
 void buy_coffee(Kitty* kitty, int amount, CurrencyValue* cost)
@@ -66,6 +71,7 @@ void buy_coffee(Kitty* kitty, int amount, CurrencyValue* cost)
     add_balance_delta(&t->balance_delta_head, create_balance_delta(delta_cv, NULL));
 
     apply_transaction(kitty, t);
+    add_transaction(&kitty->transactions, t);
 }
 
 void calculate_thirst(Person* persons)
@@ -89,6 +95,7 @@ void consume_pack(Kitty* kitty)
     add_packs_delta(&t->packs_delta_head, pd);
 
     apply_transaction(kitty, t);
+    add_transaction(&kitty->transactions, t);
 }
 
 void apply_transaction(Kitty* k, Transaction* t){
@@ -112,6 +119,12 @@ void apply_transaction(Kitty* k, Transaction* t){
             k->counter += cd->counter;
         }
     }
+}
 
-    add_transaction(&k->transactions, t);
+void revert_transaction(Kitty* k, Transaction* t)
+{
+    Transaction* inverted_t = invert_transaction(t);
+    apply_transaction(k, inverted_t);
+
+    free_transaction(pop_transaction(&k->transactions));
 }
