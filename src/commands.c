@@ -126,9 +126,10 @@ int command_help(int argc, char** argv, Kitty* kitty)
 
 /* Kitty management */
 
+// this has to be rehauled
 int command_set(int argc, char** argv, Kitty* kitty)
 {
-    if (argc < 3) {
+    if (argc < 3 || argc > 4) {
         printf("Usage: %s %s <option> <value>\n", argv[0], argv[1]);
         printf("Available options are:\n\tprice\n\tbalance\n\tpacks\n\tcurrency\n\tprefix_currency_value\n");
         return 1;
@@ -198,7 +199,7 @@ int command_set(int argc, char** argv, Kitty* kitty)
 
 int command_drink(int argc, char** argv, Kitty* kitty)
 {
-    if (argc < 4) {
+    if (argc != 4) {
         printf("Usage: %s %s <name> <amount>\n", argv[0], argv[1]);
         return 1;
     }
@@ -215,7 +216,7 @@ int command_drink(int argc, char** argv, Kitty* kitty)
 
 int command_buy(int argc, char** argv, Kitty* kitty)
 {
-    if (argc < 3) {
+    if (argc != 4) {
         printf("Usage: %s %s <amount> <cost>\n", argv[0], argv[1]);
         return 1;
     }
@@ -233,7 +234,7 @@ int command_buy(int argc, char** argv, Kitty* kitty)
 
 int command_pay(int argc, char** argv, Kitty* kitty)
 {
-    if (argc < 4) {
+    if (argc != 4) {
         printf("Usage: %s %s <name> <amount>\n", argv[0], argv[1]);
         return 1;
     }
@@ -255,7 +256,7 @@ int command_pay(int argc, char** argv, Kitty* kitty)
 
 int command_reimbursement(int argc, char** argv, Kitty* kitty)
 {
-    if (argc < 3) {
+    if (argc != 4) {
         printf("Usage: %s %s <name> <amount>\n", argv[0], argv[1]);
         return 1;
     }
@@ -275,8 +276,10 @@ int command_reimbursement(int argc, char** argv, Kitty* kitty)
 
 int command_consume(int argc, char** argv, Kitty* kitty)
 {
-    (void)argc;
-    (void)argv;
+    if (argc != 2) {
+        printf("Usage: %s %s\n", argv[0], argv[1]);
+        return 1;
+    }
 
     if (kitty->packs == 0) {
         printf("No packs left\n");
@@ -290,15 +293,21 @@ int command_consume(int argc, char** argv, Kitty* kitty)
 
 int command_latex(int argc, char** argv, Kitty* kitty)
 {
-    (void)argc;
-    (void)argv;
+    if (argc != 2) {
+        printf("Usage: %s %s\n", argv[0], argv[1]);
+        return 1;
+    }
+
     return fprint_new_latex_sheet(stdout, kitty);
 }
 
 int command_thirst(int argc, char** argv, Kitty* kitty)
 {
-    (void)argc;
-    (void)argv;
+    if (argc != 2) {
+        printf("Usage: %s %s\n", argv[0], argv[1]);
+        return 1;
+    }
+
     calculate_thirst(kitty->persons);
 
     printf("Thirst calculated. Current coffees reset.\n");
@@ -307,8 +316,10 @@ int command_thirst(int argc, char** argv, Kitty* kitty)
 
 int command_undo(int argc, char** argv, Kitty* kitty)
 {
-    (void)argc;
-    (void)argv;
+    if (argc != 2) {
+        printf("Usage: %s %s\n", argv[0], argv[1]);
+        return 1;
+    }
 
     if (!kitty->transactions) {
         printf("No transactions to undo.\n");
@@ -328,7 +339,7 @@ int command_undo(int argc, char** argv, Kitty* kitty)
 int command_add(int argc, char** argv, Kitty* kitty)
 {
     if (argc < 3) {
-        printf("Usage: %s %s <name>\n", argv[0], argv[1]);
+        printf("Usage: %s %s <names>...\n", argv[0], argv[1]);
         return 1;
     }
 
@@ -351,7 +362,7 @@ int command_add(int argc, char** argv, Kitty* kitty)
 int command_remove(int argc, char** argv, Kitty* kitty)
 {
     if (argc < 3) {
-        printf("Usage: %s %s <name>\n", argv[0], argv[1]);
+        printf("Usage: %s %s <names>...\n", argv[0], argv[1]);
         return 1;
     }
 
@@ -373,7 +384,7 @@ int command_remove(int argc, char** argv, Kitty* kitty)
         while (getchar() != '\n'); // clear input buffer
         if (answer != 'y' && answer != 'Y') {
             printf("Aborting removal of %s\n", person_to_remove->name);
-            return 1;
+            continue;
         }
 
         remove_person(&kitty->persons, person_to_remove);
@@ -386,7 +397,7 @@ int command_remove(int argc, char** argv, Kitty* kitty)
 
 int command_rename(int argc, char** argv, Kitty* kitty)
 {
-    if (argc < 4) {
+    if (argc != 4) {
         printf("Usage: %s %s <old_name> <new_name>\n", argv[0], argv[1]);
         return 1;
     }
