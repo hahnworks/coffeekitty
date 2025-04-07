@@ -390,6 +390,7 @@ int command_remove(int argc, char** argv, Kitty* kitty)
         remove_person(&kitty->persons, person_to_remove);
         clear_transactions_with_target(&kitty->transactions, person_to_remove);
         printf("Sucessfully removed person %s\n", person_to_remove->name);
+        free_person(person_to_remove);
     }
 
     return 0;
