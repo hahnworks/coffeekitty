@@ -26,7 +26,8 @@ enum transaction_type {
     PERSON_BUYS_MISC = 1,
     PERSON_DRINKS_COFFEE = 2,
     KITTY_BUY_COFFEE = 3,
-    KITTY_CONSUME_PACK = 4
+    KITTY_CONSUME_PACK = 4,
+    UNDO = 5,
 };
 
 typedef struct BalanceDelta {

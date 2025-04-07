@@ -236,7 +236,7 @@ void free_transactions(Transaction* head)
 
 Transaction* invert_transaction(Transaction* transaction)
 {
-    Transaction* inverted = create_transaction(transaction->type, -1);
+    Transaction* inverted = create_transaction(UNDO, -1);
 
     for (BalanceDelta* bd = transaction->balance_delta_head; bd; bd = bd->next) {
         CurrencyValue* cv = new_negative_currency_value(bd->cv);

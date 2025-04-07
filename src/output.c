@@ -84,6 +84,9 @@ void fprint_transaction(FILE* file, Kitty* kitty, Transaction* transaction, bool
     case KITTY_CONSUME_PACK:
         fprintf(file, "A pack is consumed.\n");
         break;
+    case UNDO:
+        fprintf(file, "Inverted transaction.\n");
+        break;
     default:
         fprintf(file, "Unknown transaction type.\n");
         break;
