@@ -21,6 +21,7 @@
 #include "settings.h"
 #include "currency.h"
 #include "person.h"
+#include "transactions.h"
 
 typedef struct Kitty{
     CurrencyValue *balance;
@@ -31,9 +32,10 @@ typedef struct Kitty{
 
     Person *persons;
     Settings *settings;
+    Transaction *transactions;
 } Kitty;
 
-Kitty *create_kitty(int balance, int price, int packs, int counter, Settings* settings, Person* persons);
+Kitty *create_kitty(int balance, int price, int packs, int counter, Settings* settings, Person* persons, Transaction* transactions);
 void free_kitty(Kitty *k);
 
 #endif

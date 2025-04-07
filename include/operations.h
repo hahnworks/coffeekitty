@@ -15,22 +15,24 @@
  * along with this program. If not, see <https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12>.
  */
 
-#ifndef OUTPUT_H
-#define OUTPUT_H
 
-#include <stdio.h>
+#ifndef OPERATIONS_H
+#define OPERATIONS_H
 
-#include "kitty.h"
 #include "person.h"
+#include "currency.h"
+#include "kitty.h"
 #include "transactions.h"
 
-void fprint_person(FILE* file, Person *p);
-void print_persons(Person *head);
-void fprint_kitty(FILE* file, Kitty *k);
-void print_help(char* argv0);
-void fprint_transaction(FILE* file, Kitty* kitty, Transaction* transaction, bool verbose);
+void person_pays_debt(Kitty* kitty, Person* person,  CurrencyValue* payment);
+void person_buys_misc(Kitty* kitty, Person* person, CurrencyValue* cost);
+void person_drinks_coffee(Kitty* kitty, Person* person, int amount);
+void buy_coffee(Kitty* kitty, int amount, CurrencyValue* cost);
+void consume_pack(Kitty* kitty);
 
-void fprint_hline(FILE* file, int width);
-void fprint_output(FILE* file, Kitty* kitty);
+void calculate_thirst(Person* person);
+
+void apply_transaction(Kitty *kitty, Transaction *t);
+void revert_transaction(Kitty *kitty, Transaction *t);
 
 #endif

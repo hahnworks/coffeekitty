@@ -67,7 +67,7 @@ This can be hung above your coffee machine. If a person drinks coffee, she indic
 Every person has a balance. If a person drinks coffee, it can be indicated by
 
 ```bash
-coffeekitty drink [name] [amount]
+coffeekitty drink <name> <amount>
 ```
 
 This automatically updates the person’s balance.
@@ -75,7 +75,7 @@ This automatically updates the person’s balance.
 If a person pays her debts, you can use
 
 ```bash
-coffeekitty pay [name] [amount]
+coffeekitty pay <name> <amount>
 ```
 
 The balance of the coffeekitty and the balance of the person are updated accordingly.
@@ -100,7 +100,7 @@ if a pack has been used up.
 You can use
 
 ```bash
-coffeekitty buy [packs] [cost]
+coffeekitty buy <packs> <cost>
 ```
 
 to use money in the kitty to update the packs in the kitty.
@@ -111,8 +111,3 @@ to use money in the kitty to update the packs in the kitty.
 ### Database
 
 If something goes wrong, you can modify the database located in `$HOME/.coffeekitty/data.xml`.
-
-
-### (Current) Limitations
-
-No transaction log has been implemented yet, therefore there is no undo function.

@@ -39,6 +39,7 @@ int command_buy(int argc, char** argv, Kitty* kitty);
 int command_pay(int argc, char** argv, Kitty* kitty);
 int command_reimbursement(int argc, char** argv, Kitty* kitty);
 int command_consume(int argc, char** argv, Kitty* kitty);
+int command_undo(int argc, char** argv, Kitty* kitty);
 // Output management
 int command_latex(int argc, char** argv, Kitty* kitty);
 int command_thirst(int argc, char** argv, Kitty* kitty);

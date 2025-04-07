@@ -22,8 +22,9 @@
 #include "settings.h"
 #include "currency.h"
 #include "person.h"
+#include "transactions.h"
 
-Kitty *create_kitty(int balance, int price, int packs, int counter, Settings *settings, Person *persons)
+Kitty *create_kitty(int balance, int price, int packs, int counter, Settings *settings, Person *persons, Transaction *transactions)
 {
     Kitty *k = malloc(sizeof(Kitty));
 
@@ -35,6 +36,7 @@ Kitty *create_kitty(int balance, int price, int packs, int counter, Settings *se
 
     k->settings = settings;
     k->persons = persons;
+    k->transactions = transactions;
     return k;
 }
 

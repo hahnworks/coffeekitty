@@ -156,3 +156,15 @@ void div_currency_value(CurrencyValue *cv, int divisor)
 {
     cv->value /= divisor;
 }
+
+void negative_currency_value(CurrencyValue *cv)
+{
+    cv->value = -cv->value;
+}
+
+CurrencyValue* new_negative_currency_value(CurrencyValue *cv)
+{
+    CurrencyValue *ncv = copy_currency_value(cv);
+    negative_currency_value(ncv);
+    return ncv;
+}

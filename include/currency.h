@@ -37,6 +37,7 @@ Currency *create_currency_from_locale();
 CurrencyValue *create_currency_value(int value, Currency *currency);
 void free_currency(Currency *c);
 void free_currency_value(CurrencyValue *cv);
+CurrencyValue* copy_currency_value(CurrencyValue *cv);
 
 const char* format_currency_value_color_prefix(CurrencyValue *cv);
 const char* format_currency_value_color_suffix(CurrencyValue *cv);
@@ -47,5 +48,7 @@ void add_to_currency_value(CurrencyValue *cv1, CurrencyValue *cv2);
 void sub_from_currency_value(CurrencyValue *cv1, CurrencyValue *cv2);
 void mul_currency_value(CurrencyValue *cv, int factor);
 void div_currency_value(CurrencyValue *cv, int divisor);
+void negative_currency_value(CurrencyValue *cv);
+CurrencyValue* new_negative_currency_value(CurrencyValue *cv);
 
 #endif

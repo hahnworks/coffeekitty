@@ -24,6 +24,7 @@
 #include "person.h"
 #include "colors.h"
 #include "currency.h"
+#include "transactions.h"
 
 void fprint_person(FILE* file, Person *p)
 {
@@ -61,6 +62,68 @@ void fprint_hline(FILE* file, int width)
         fprintf(file, "-");
     }
     fprintf(file, "\n");
+}
+
+void fprint_transaction(FILE* file, Kitty* kitty, Transaction* transaction, bool verbose){
+    fprintf(file, ANSI_YELLOW "+++ Transaction +++\n" ANSI_RESET);
+
+    fprintf(file, "Type: ");
+    switch (transaction->type) {
+    case PERSON_PAYS_DEBT:
+        fprintf(file, "Person pays debt.\n");
+        break;
+    case PERSON_BUYS_MISC:
+        fprintf(file, "Person buys misc.\n");
+        break;
+    case PERSON_DRINKS_COFFEE:
+        fprintf(file, "Person drinks coffee.\n");
+        break;
+    case KITTY_BUY_COFFEE:
+        fprintf(file, "Buying coffee.\n");
+        break;
+    case KITTY_CONSUME_PACK:
+        fprintf(file, "A pack is consumed.\n");
+        break;
+    default:
+        fprintf(file, "Unknown transaction type.\n");
+        break;
+    }
+
+    fprintf(file, "Changes: \n");
+    if (transaction->balance_delta_head)
+        fprintf(file, "-> Balance: \n");
+    for (BalanceDelta* bd = transaction->balance_delta_head; bd; bd = bd->next) {
+        if (bd->target)
+            fprintf(file, "   Balance of %s is modified by ", bd->target->name);
+        else
+            fprintf(file, "   Kitty balance is modified by ");
+
+        fprintf(file, "%s\n", format_currency_value(bd->cv, true, true));
+    }
+
+    if (transaction->packs_delta_head)
+        fprintf(file, "-> Packs: \n");
+    char verb[6] = {0};
+    for (PacksDelta* pd = transaction->packs_delta_head; pd; pd = pd->next) {
+        if (pd->packs > 0)
+            fprintf(file, "   Kitty gets %i packs\n", pd->packs);
+        else if (pd->packs < 0)
+            fprintf(file, "   Kitty loses %i packs\n", -pd->packs);
+    }
+
+    if (transaction->counter_delta_head)
+        fprintf(file, "-> Counters: \n");
+    for (CounterDelta* cd = transaction->counter_delta_head; cd; cd = cd->next) {
+        if (cd->counter >= 0)
+            strcpy(verb, "gets");
+        else if (cd->counter < 0)
+            strcpy(verb, "loses");
+
+        if (cd->target)
+            fprintf(file, "   %s %s %i coffees\n", cd->target->name, verb, cd->counter);
+        else
+            fprintf(file, "   Total %s %i coffees\n", verb, cd->counter);
+    }
 }
 
 int utf8_strlen(const char* s)
