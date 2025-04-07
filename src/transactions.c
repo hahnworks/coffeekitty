@@ -221,6 +221,8 @@ Transaction* remove_transaction(Transaction** head, Transaction* transaction)
 void free_transaction(Transaction* t)
 {
     free_balance_deltas(t->balance_delta_head);
+    free_counter_deltas(t->counter_delta_head);
+    free_packs_deltas(t->packs_delta_head);
     free(t);
 }
 

@@ -126,6 +126,9 @@ Transaction* parse_transaction(const xmlNode* transaction_node, const Person* pe
     else
         timestamp = atol((char*) timestamp_string);
 
+    xmlFree(type_string);
+    xmlFree(timestamp_string);
+
     Transaction* transaction = create_transaction(type, timestamp);
 
     xmlNode *balance_deltas_node = NULL,
