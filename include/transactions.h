@@ -77,5 +77,6 @@ void free_transaction(Transaction* t);
 void free_transactions(Transaction* head);
 
 Transaction* invert_transaction(Transaction* transaction);
+Transaction* clear_transactions_with_target(Transaction** head, Person* target);
 
 #endif

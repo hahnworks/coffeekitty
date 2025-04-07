@@ -27,8 +27,10 @@
 #include "settings.h"
 
 #include "output.h"
+#include "colors.h"
 #include "operations.h"
 #include "latex.h"
+#include "transactions.h"
 
 const Command commands[] = {
     {"#", NULL, "General:"},
@@ -359,7 +361,23 @@ int command_remove(int argc, char** argv, Kitty* kitty)
             printf("Person to remove %s not found\n", argv[2]);
             return 1;
         }
+
+        if (person_to_remove->balance->value != 0) {
+            printf("%sPerson %s has a non-zero balance!%s\n", ANSI_RED, person_to_remove->name, ANSI_RESET);
+        }
+
+        printf("Are you sure you want to remove %s?\n"
+               "This will remove all transactions related to this person.\n"
+               "THIS ACTION CANNOT BE UNDONE. (y/N): ", person_to_remove->name);
+        char answer = getchar();
+        while (getchar() != '\n'); // clear input buffer
+        if (answer != 'y' && answer != 'Y') {
+            printf("Aborting removal of %s\n", person_to_remove->name);
+            return 1;
+        }
+
         remove_person(&kitty->persons, person_to_remove);
+        clear_transactions_with_target(&kitty->transactions, person_to_remove);
         printf("Sucessfully removed person %s\n", person_to_remove->name);
     }
 

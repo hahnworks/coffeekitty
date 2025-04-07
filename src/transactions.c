@@ -193,6 +193,31 @@ Transaction* pop_transaction(Transaction** head)
     return lt;
 }
 
+Transaction* remove_transaction(Transaction** head, Transaction* transaction)
+{
+    if (!*head) // no transactions
+        return NULL;
+
+    if (*head == transaction) { // first transaction
+        Transaction* t = *head;
+        *head = (*head)->next;
+        return t;
+    }
+
+    // all other cases
+    Transaction* prev = *head;
+    while (prev->next && prev->next != transaction) { // shift until found and end is not reached
+        prev = prev->next;
+    }
+
+    if (prev->next == NULL) // transaction not found
+        return NULL;
+
+    Transaction* t = prev->next; // pick
+    prev->next = t->next; // reconnect
+    return t;
+}
+
 void free_transaction(Transaction* t)
 {
     free_balance_deltas(t->balance_delta_head);
@@ -225,4 +250,19 @@ Transaction* invert_transaction(Transaction* transaction)
     }
 
     return inverted;
+}
+
+Transaction* clear_transactions_with_target(Transaction** head, Person* target)
+{
+    for(Transaction* t = *head; t; t = t->next) {
+        if (
+            (t->balance_delta_head && t->balance_delta_head->target == target)
+            ||
+            (t->counter_delta_head && t->counter_delta_head->target == target)
+        ) {
+            remove_transaction(head, t);
+        }
+    }
+
+    return *head;
 }
