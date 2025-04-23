@@ -2,23 +2,25 @@
 
 A terminal-based management tool for collective coffee spending
 
-## Idea
+## Motivation
 
 I developed this to ease the tracking of coffee consumption in our workgroup.
-You can create a tally sheet with the persons currently drinking coffee, where every person has to add a tally when making coffee.
+Coffeekitty allows you to create a tally sheet with the persons currently drinking coffee, where every person has to add a tally mark when making coffee.
 
-![coffeekitty latex](img/coffeekitty_print.png)
+![Screenshot of the output of `coffeekitty` if no additional commands are provided](img/coffeekitty_print.png)
 
 At the end of an accounting period, you can enter the coffee consumption, where `coffeekitty` will then calculate the balance (and adjust the height of the tally sheet).
 
-![coffeekitty print](img/coffeekitty_latex.png)
+![Tally sheet created by `coffeekitty latex`](img/coffeekitty_latex.png)
 
-Coffeekitty also tracks the number of packs of coffee in storage.
+Coffeekitty can also track the number of packs of coffee in storage.
 
 
-## Dependencies
+## Dependencies and Compiling
 
-Just `libxml2` and `pkg-config`. You will need `pdflatex` for the tally sheet.
+Just `libxml2` and `pkg-config` are required. You will need `pdflatex` for the tally sheet.
+
+`coffeekitty` does compile and run on GNU/Linux and macOS (provided the Xcode Command Line Tools are installed).
 
 
 ## Installation
@@ -53,16 +55,17 @@ A cup of coffee has a fixed price, which defaults to 0.25 EUR.
 You can set the price using `coffeekitty set price 1.00`.
 The currency display can be adjusted for e.g. USD using `coffeekitty set currency USD` and `coffeekitty set prefix_currency_value true`.
 
-Create a tally using
+Create a tally sheet using
 
 ```bash
 coffeekitty latex > sheet.tex && pdflatex sheet.tex
 ```
 
-This can be hung above your coffee machine. If a person drinks coffee, she indicates it by adding a tally.
+This can be hung above your coffee machine. If a person drinks coffee, she indicates it by adding a tally mark.
 
+### Transactions
 
-### Payment and Balance
+#### Payment and Balance
 
 Every person has a balance. If a person drinks coffee, it can be indicated by
 
@@ -80,14 +83,14 @@ coffeekitty pay <name> <amount>
 
 The balance of the coffeekitty and the balance of the person are updated accordingly.
 
-### Thirst
+If a person buys equipment for the coffee machine which costs money, she can be reimbursed for it.
+For this, you can use
 
-When adding the drank coffees, they increase the counter of `current coffees` for a person.
-By using `coffeekitty thirst` you can invoke a calculation of a thirst parameter, which is the amount of coffee consumed by this one person in the last period.
-The thirst parameter is used for the line-height calculation of the tally sheet.
-After `coffeekitty thirst` is called, the `current coffees` counter is reset.
+```bash
+coffeekitty reimbursement <name> <amount>
+```
 
-### Coffee Pack Management
+#### Coffee Pack Management
 
 Use
 
@@ -104,6 +107,21 @@ coffeekitty buy <packs> <cost>
 ```
 
 to use money in the kitty to update the packs in the kitty.
+
+#### Undo
+
+All transactions (`drink`, `buy`, `pay`, `reimbursement` and `consume`) are logged.
+A transaction can be undone using `coffeekitty undo`.
+
+
+### Statistics
+
+#### Thirst
+
+When adding the drank coffees, they increase the counter of `current coffees` for a person.
+By using `coffeekitty thirst` you can invoke a calculation of a thirst parameter, which is the amount of coffee consumed by this one person in the last period.
+The thirst parameter is used for the line-height calculation of the tally sheet.
+After `coffeekitty thirst` is called, the `current coffees` counter is reset.
 
 
 ## Troubleshooting
