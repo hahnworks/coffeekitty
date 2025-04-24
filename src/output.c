@@ -64,7 +64,7 @@ void fprint_hline(FILE* file, int width)
     fprintf(file, "\n");
 }
 
-void fprint_transaction(FILE* file, Kitty* kitty, Transaction* transaction, bool verbose){
+void fprint_transaction(FILE* file, Transaction* transaction){
     fprintf(file, ANSI_YELLOW "+++ Transaction +++\n" ANSI_RESET);
 
     fprintf(file, "Type: ");

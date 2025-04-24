@@ -99,7 +99,7 @@ void consume_pack(Kitty* kitty)
 }
 
 void apply_transaction(Kitty* k, Transaction* t){
-    fprint_transaction(stdout, k, t, false);
+    fprint_transaction(stdout, t);
 
     for(BalanceDelta* bd = t->balance_delta_head; bd; bd = bd->next) {
         if (bd->target) {

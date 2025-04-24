@@ -28,7 +28,7 @@ void fprint_person(FILE* file, Person *p);
 void print_persons(Person *head);
 void fprint_kitty(FILE* file, Kitty *k);
 void print_help(char* argv0);
-void fprint_transaction(FILE* file, Kitty* kitty, Transaction* transaction, bool verbose);
+void fprint_transaction(FILE* file, Transaction* transaction);
 
 void fprint_hline(FILE* file, int width);
 void fprint_output(FILE* file, Kitty* kitty);
