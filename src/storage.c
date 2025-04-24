@@ -35,7 +35,7 @@
     #include <sys/syslimits.h>
 #endif
 
-CounterDelta* parse_counter_delta(const xmlNode* counter_delta_node, const Person* persons)
+CounterDelta* parse_counter_delta(const xmlNode* counter_delta_node, Person* persons)
 {
     xmlChar *target_name = xmlGetProp(counter_delta_node, (const xmlChar*) "target");
     xmlChar *value_string = xmlGetProp(counter_delta_node, (const xmlChar*) "value");
@@ -52,7 +52,7 @@ CounterDelta* parse_counter_delta(const xmlNode* counter_delta_node, const Perso
     return counter_delta;
 }
 
-CounterDelta* parse_counter_deltas(const xmlNode* counter_deltas_node, const Person* persons)
+CounterDelta* parse_counter_deltas(const xmlNode* counter_deltas_node, Person* persons)
 {
     CounterDelta *counter_deltas = NULL;
     for (xmlNode *delta_node = counter_deltas_node->children; delta_node; delta_node = delta_node->next) {
@@ -86,7 +86,7 @@ PacksDelta* parse_packs_deltas(const xmlNode* packs_deltas_node)
     return packs_deltas;
 }
 
-BalanceDelta* parse_balance_delta(const xmlNode* balance_delta_node, const Person* persons, const Settings* settings)
+BalanceDelta* parse_balance_delta(const xmlNode* balance_delta_node, Person* persons, const Settings* settings)
 {
     xmlChar *target_name = xmlGetProp(balance_delta_node, (const xmlChar*) "target");
     xmlChar *value_string = xmlGetProp(balance_delta_node, (const xmlChar*) "value");
@@ -103,7 +103,7 @@ BalanceDelta* parse_balance_delta(const xmlNode* balance_delta_node, const Perso
     return balance_delta;
 }
 
-BalanceDelta* parse_balance_deltas(const xmlNode* balance_deltas_node, const Person* persons, const Settings* settings)
+BalanceDelta* parse_balance_deltas(const xmlNode* balance_deltas_node, Person* persons, const Settings* settings)
 {
     BalanceDelta *balance_deltas = NULL;
     for (xmlNode *delta_node = balance_deltas_node->children; delta_node; delta_node = delta_node->next) {
@@ -115,7 +115,7 @@ BalanceDelta* parse_balance_deltas(const xmlNode* balance_deltas_node, const Per
     return balance_deltas;
 }
 
-Transaction* parse_transaction(const xmlNode* transaction_node, const Person* persons, const Settings* settings)
+Transaction* parse_transaction(const xmlNode* transaction_node, Person* persons, const Settings* settings)
 {
     xmlChar* type_string = xmlGetProp(transaction_node, (const xmlChar*) "type");
     enum transaction_type type = atoi((char*) type_string);
@@ -159,7 +159,7 @@ Transaction* parse_transaction(const xmlNode* transaction_node, const Person* pe
     return transaction;
 }
 
-Transaction* parse_transactions(const xmlNode* transactions_node, const Person* persons, const Settings* settings)
+Transaction* parse_transactions(const xmlNode* transactions_node, Person* persons, const Settings* settings)
 {
     Transaction *transactions = NULL;
     for (xmlNode *transaction_node = transactions_node->children; transaction_node; transaction_node = transaction_node->next) {

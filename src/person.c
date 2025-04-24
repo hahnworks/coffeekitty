@@ -121,7 +121,7 @@ Person* rename_person(Person* persons, Person *person, char *new_name)
 
 Person *get_person_by_name(Person *persons, char *name)
 {
-    const Person *p = persons;
+    Person *p = persons;
     while (p) {
         if (strcmp(p->name, name) == 0) {
             return p;
