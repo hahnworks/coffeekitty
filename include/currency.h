@@ -32,23 +32,23 @@ typedef struct CurrencyValue{
     Currency *currency;
 } CurrencyValue;
 
-Currency *create_currency(char* isoname, bool prefix, int subunit_digits, char decimal);
+Currency *currency_alloc(char* isoname, bool prefix, int subunit_digits, char decimal);
 Currency *create_currency_from_locale();
-CurrencyValue *create_currency_value(int value, Currency *currency);
-void free_currency(Currency *c);
-void free_currency_value(CurrencyValue *cv);
-CurrencyValue* copy_currency_value(CurrencyValue *cv);
+CurrencyValue *currency_value_alloc(int value, Currency *currency);
+void currency_free(Currency *c);
+void currency_value_free(CurrencyValue *cv);
+CurrencyValue* currency_value_copy(CurrencyValue *cv);
 
-const char* format_currency_value_color_prefix(CurrencyValue *cv);
-const char* format_currency_value_color_suffix(CurrencyValue *cv);
-const char* format_currency_value(CurrencyValue* cv, bool color, bool affix);
+const char* currency_value_format_color_prefix(CurrencyValue *cv);
+const char* currency_value_format_color_suffix(CurrencyValue *cv);
+const char* currency_value_format(CurrencyValue* cv, bool color, bool affix);
 CurrencyValue* ftocv(float value, Currency *currency);
 
-void add_to_currency_value(CurrencyValue *cv1, CurrencyValue *cv2);
-void sub_from_currency_value(CurrencyValue *cv1, CurrencyValue *cv2);
-void mul_currency_value(CurrencyValue *cv, int factor);
-void div_currency_value(CurrencyValue *cv, int divisor);
-void negative_currency_value(CurrencyValue *cv);
-CurrencyValue* new_negative_currency_value(CurrencyValue *cv);
+void currency_value_add(CurrencyValue *cv1, CurrencyValue *cv2);
+void currency_value_sub(CurrencyValue *cv1, CurrencyValue *cv2);
+void currency_value_mul(CurrencyValue *cv, int factor);
+void currency_value_div(CurrencyValue *cv, int divisor);
+void currency_value_negative(CurrencyValue *cv);
+CurrencyValue* currency_value_new_negative(CurrencyValue *cv);
 
 #endif

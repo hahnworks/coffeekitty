@@ -29,7 +29,7 @@
 void fprint_person(FILE* file, Person *p)
 {
     fprintf(file, "Name: %s\n", p->name);
-    fprintf(file,"Balance: %s\n", format_currency_value(p->balance, true, true));
+    fprintf(file,"Balance: %s\n", currency_value_format(p->balance, true, true));
     fprintf(file, "\n");
     fprintf(file,"Thirst: %f\n", p->thirst);
     fprintf(file,"Current coffees: %i\n", p->current_coffees);
@@ -50,8 +50,8 @@ void print_persons(Person *head)
 void fprint_kitty(FILE* file, Kitty *kitty)
 {
     fprintf(file, ANSI_YELLOW "+++ Kitty +++\n" ANSI_RESET);
-    fprintf(file, "Balance: %s\n", format_currency_value(kitty->balance, true, true));
-    fprintf(file, "Price: %s\n", format_currency_value(kitty->price, false, true));
+    fprintf(file, "Balance: %s\n", currency_value_format(kitty->balance, true, true));
+    fprintf(file, "Price: %s\n", currency_value_format(kitty->price, false, true));
     fprintf(file, "Packs: %i\n", kitty->packs);
     fprintf(file, "Counter: %i\n", kitty->counter);
 }
@@ -101,7 +101,7 @@ void fprint_transaction(FILE* file, Transaction* transaction){
         else
             fprintf(file, "   Kitty balance is modified by ");
 
-        fprintf(file, "%s\n", format_currency_value(bd->cv, true, true));
+        fprintf(file, "%s\n", currency_value_format(bd->cv, true, true));
     }
 
     if (transaction->packs_delta_head)
@@ -155,7 +155,7 @@ void fprint_output(FILE* file, Kitty* kitty)
     int thirst_width = strlen("Thirst");
     for (Person* p = kitty->persons; p; p = p->next) {
         int this_name_width = utf8_strlen(p->name);
-        int this_balance_width = strlen(format_currency_value(p->balance, false, true));
+        int this_balance_width = strlen(currency_value_format(p->balance, false, true));
         int this_current_counter_width = snprintf(NULL, 0, "%i", p->current_coffees);
         int this_total_counter_width = snprintf(NULL, 0, "%i", p->total_coffees);
         int this_thirst_width = snprintf(NULL, 0, "%f", p->thirst);
@@ -176,9 +176,9 @@ void fprint_output(FILE* file, Kitty* kitty)
     for (Person* p = kitty->persons; p; p = p->next) {
         fprintf(file, "%-*s | %s%*s%s | %*i / %*i | %-*f\n",
             name_width + excess_bytes(p->name), p->name,
-            format_currency_value_color_prefix(p->balance),
-            balance_width, format_currency_value(p->balance, false, true),
-            format_currency_value_color_suffix(p->balance),
+            currency_value_format_color_prefix(p->balance),
+            balance_width, currency_value_format(p->balance, false, true),
+            currency_value_format_color_suffix(p->balance),
             current_counter_width, p->current_coffees,
             total_counter_width, p->total_coffees, 
             thirst_width, p->thirst);

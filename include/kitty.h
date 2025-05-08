@@ -36,6 +36,6 @@ typedef struct Kitty{
 } Kitty;
 
 Kitty *create_kitty(int balance, int price, int packs, int counter, Settings* settings, Person* persons, Transaction* transactions);
-void free_kitty(Kitty *k);
+void kitty_free(Kitty *k);
 
 #endif

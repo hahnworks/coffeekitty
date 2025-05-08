@@ -142,9 +142,9 @@ int command_set(int argc, char** argv, Kitty* kitty)
         }
         Currency* currency = kitty->settings->currency;
         CurrencyValue* price = ftocv(atof(argv[3]), currency);
-        free_currency_value(kitty->price);
+        currency_value_free(kitty->price);
         kitty->price = price;
-        printf("Price set to %s\n", format_currency_value(price, false, true));
+        printf("Price set to %s\n", currency_value_format(price, false, true));
     } else if (strcmp(argv[2], "balance") == 0) {
         if (argc < 4) {
             printf("Usage: %s %s balance <value>\n", argv[0], argv[1]);
@@ -152,9 +152,9 @@ int command_set(int argc, char** argv, Kitty* kitty)
         }
         Currency* currency = kitty->settings->currency;
         CurrencyValue* balance = ftocv(atof(argv[3]), currency);
-        free_currency_value(kitty->balance);
+        currency_value_free(kitty->balance);
         kitty->balance = balance;
-        printf("Balance set to %s\n", format_currency_value(balance, true, true));
+        printf("Balance set to %s\n", currency_value_format(balance, true, true));
     } else if (strcmp(argv[2], "packs") == 0) {
         if (argc < 4) {
             printf("Usage: %s %s packs <value>\n", argv[0], argv[1]);
@@ -227,7 +227,7 @@ int command_buy(int argc, char** argv, Kitty* kitty)
 
     buy_coffee(kitty, amount, cost);
 
-    free_currency_value(cost);
+    currency_value_free(cost);
 
     return 0;
 }
@@ -249,7 +249,7 @@ int command_pay(int argc, char** argv, Kitty* kitty)
 
     person_pays_debt(kitty,p, payment);
 
-    free_currency_value(payment);
+    currency_value_free(payment);
 
     return 0;
 }
@@ -349,7 +349,7 @@ int command_add(int argc, char** argv, Kitty* kitty)
 
     for (int i=2; i<argc; i++) {
         Person *new_person = create_person(argv[i], 0, kitty->settings->currency);
-        if (add_person(&kitty->persons, new_person)) {
+        if (person_add(&kitty->persons, new_person)) {
             printf("Sucessfully added person %s\n", new_person->name);
         } else {
             printf("Failed to add person %s\n", new_person->name);
@@ -387,10 +387,10 @@ int command_remove(int argc, char** argv, Kitty* kitty)
             continue;
         }
 
-        remove_person(&kitty->persons, person_to_remove);
+        person_remove(&kitty->persons, person_to_remove);
         clear_transactions_with_target(&kitty->transactions, person_to_remove);
         printf("Sucessfully removed person %s\n", person_to_remove->name);
-        free_person(person_to_remove);
+        person_free(person_to_remove);
     }
 
     return 0;
@@ -409,7 +409,7 @@ int command_rename(int argc, char** argv, Kitty* kitty)
         return 1;
     }
 
-    if (rename_person( kitty->persons, person_to_rename, argv[3]))
+    if (person_rename( kitty->persons, person_to_rename, argv[3]))
         printf("Sucessfully renamed person %s to %s\n", argv[2], argv[3]);
     else
         printf("Failed to rename person %s to %s\n", argv[2], argv[3]);

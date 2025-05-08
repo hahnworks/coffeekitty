@@ -28,8 +28,8 @@ Kitty *create_kitty(int balance, int price, int packs, int counter, Settings *se
 {
     Kitty *k = malloc(sizeof(Kitty));
 
-    k->balance = create_currency_value(balance, settings->currency);
-    k->price = create_currency_value(price, settings->currency);
+    k->balance = currency_value_alloc(balance, settings->currency);
+    k->price = currency_value_alloc(price, settings->currency);
 
     k->counter = counter;
     k->packs = packs;
@@ -40,9 +40,9 @@ Kitty *create_kitty(int balance, int price, int packs, int counter, Settings *se
     return k;
 }
 
-void free_kitty(Kitty *k)
+void kitty_free(Kitty *k)
 {
-    free_currency_value(k->balance);
-    free_currency_value(k->price);
+    currency_value_free(k->balance);
+    currency_value_free(k->price);
     free(k);
 }

@@ -56,28 +56,28 @@ typedef struct Transaction {
     struct Transaction* next;
 } Transaction;
 
-BalanceDelta* create_balance_delta(CurrencyValue* cv, Person* target);
-BalanceDelta* add_balance_delta(BalanceDelta** head, BalanceDelta* delta);
-void free_balance_delta(BalanceDelta* delta);
-void free_balance_deltas(BalanceDelta* head);
+BalanceDelta* balance_delta_alloc(CurrencyValue* cv, Person* target);
+BalanceDelta* balance_delta_add(BalanceDelta** head, BalanceDelta* delta);
+void balance_delta_free(BalanceDelta* delta);
+void balance_deltas_free(BalanceDelta* head);
 
-PacksDelta* create_packs_delta(int packs);
-PacksDelta* add_packs_delta(PacksDelta** head, PacksDelta* delta);
-void free_packs_delta(PacksDelta* delta);
-void free_packs_deltas(PacksDelta* head);
+PacksDelta* packs_delta_alloc(int packs);
+PacksDelta* packs_delta_add(PacksDelta** head, PacksDelta* delta);
+void packs_delta_free(PacksDelta* delta);
+void packs_deltas_free(PacksDelta* head);
 
-CounterDelta* create_counter_delta(int counter, Person* target);
-CounterDelta* add_counter_delta(CounterDelta** head, CounterDelta* delta);
-void free_counter_delta(CounterDelta* delta);
-void free_counter_deltas(CounterDelta* head);
+CounterDelta* counter_delta_alloc(int counter, Person* target);
+CounterDelta* counter_delta_add(CounterDelta** head, CounterDelta* delta);
+void counter_delta_free(CounterDelta* delta);
+void counter_deltas_free(CounterDelta* head);
 
-Transaction* create_transaction(enum transaction_type type, long timestamp);
-Transaction* add_transaction(Transaction** head, Transaction* t);
-Transaction* pop_transaction(Transaction** head);
-void free_transaction(Transaction* t);
-void free_transactions(Transaction* head);
+Transaction* transaction_alloc(enum transaction_type type, long timestamp);
+Transaction* transaction_add(Transaction** head, Transaction* t);
+Transaction* transaction_pop(Transaction** head);
+void transaction_free(Transaction* t);
+void transactions_free(Transaction* head);
 
-Transaction* invert_transaction(Transaction* transaction);
+Transaction* transaction_invert(Transaction* transaction);
 Transaction* clear_transactions_with_target(Transaction** head, Person* target);
 
 #endif

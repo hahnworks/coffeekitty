@@ -24,7 +24,7 @@
 #include "person.h"
 #include "currency.h"
 
-BalanceDelta* create_balance_delta(CurrencyValue* cv, Person* target)
+BalanceDelta* balance_delta_alloc(CurrencyValue* cv, Person* target)
 {
     BalanceDelta* delta = malloc(sizeof(BalanceDelta));
     delta->cv = cv;
@@ -33,7 +33,7 @@ BalanceDelta* create_balance_delta(CurrencyValue* cv, Person* target)
     return delta;
 }
 
-BalanceDelta* add_balance_delta(BalanceDelta** head, BalanceDelta* delta)
+BalanceDelta* balance_delta_add(BalanceDelta** head, BalanceDelta* delta)
 {
     BalanceDelta* end;
     for (end = *head; end && end->next; end = end->next);
@@ -47,23 +47,23 @@ BalanceDelta* add_balance_delta(BalanceDelta** head, BalanceDelta* delta)
     return delta;
 }
 
-void free_balance_delta(BalanceDelta* delta)
+void balance_delta_free(BalanceDelta* delta)
 {
-    free_currency_value(delta->cv);
+    currency_value_free(delta->cv);
     free(delta);
 }
 
-void free_balance_deltas(BalanceDelta* head)
+void balance_deltas_free(BalanceDelta* head)
 {
     BalanceDelta* bd = head;
     while (bd) {
         BalanceDelta* next = bd->next;
-        free_balance_delta(bd);
+        balance_delta_free(bd);
         bd = next;
     }
 }
 
-PacksDelta* create_packs_delta(int packs)
+PacksDelta* packs_delta_alloc(int packs)
 {
     PacksDelta* delta = malloc(sizeof(PacksDelta));
     delta->packs = packs;
@@ -71,7 +71,7 @@ PacksDelta* create_packs_delta(int packs)
     return delta;
 }
 
-PacksDelta* add_packs_delta(PacksDelta** head, PacksDelta* delta)
+PacksDelta* packs_delta_add(PacksDelta** head, PacksDelta* delta)
 {
     PacksDelta* end;
     for (end = *head; end && end->next; end = end->next);
@@ -85,22 +85,22 @@ PacksDelta* add_packs_delta(PacksDelta** head, PacksDelta* delta)
     return delta;
 }
 
-void free_packs_delta(PacksDelta* delta)
+void packs_delta_free(PacksDelta* delta)
 {
     free(delta);
 }
 
-void free_packs_deltas(PacksDelta* head)
+void packs_deltas_free(PacksDelta* head)
 {
     PacksDelta* pd = head;
     while (pd) {
         PacksDelta* next = pd->next;
-        free_packs_delta(pd);
+        packs_delta_free(pd);
         pd = next;
     }
 }
 
-CounterDelta* create_counter_delta(int counter, Person* target)
+CounterDelta* counter_delta_alloc(int counter, Person* target)
 {
     CounterDelta* delta = malloc(sizeof(CounterDelta));
     delta->counter = counter;
@@ -109,7 +109,7 @@ CounterDelta* create_counter_delta(int counter, Person* target)
     return delta;
 }
 
-CounterDelta* add_counter_delta(CounterDelta** head, CounterDelta* delta)
+CounterDelta* counter_delta_add(CounterDelta** head, CounterDelta* delta)
 {
     CounterDelta* end;
     for (end = *head; end && end->next; end = end->next);
@@ -123,22 +123,22 @@ CounterDelta* add_counter_delta(CounterDelta** head, CounterDelta* delta)
     return delta;
 }
 
-void free_counter_delta(CounterDelta* delta)
+void counter_delta_free(CounterDelta* delta)
 {
     free(delta);
 }
 
-void free_counter_deltas(CounterDelta* head)
+void counter_deltas_free(CounterDelta* head)
 {
     CounterDelta* cd = head;
     while (cd) {
         CounterDelta* next = cd->next;
-        free_counter_delta(cd);
+        counter_delta_free(cd);
         cd = next;
     }
 }
 
-Transaction* create_transaction(enum transaction_type type, long timestamp)
+Transaction* transaction_alloc(enum transaction_type type, long timestamp)
 {
     Transaction* t = malloc(sizeof(Transaction));
     t->type = type;
@@ -154,7 +154,7 @@ Transaction* create_transaction(enum transaction_type type, long timestamp)
     return t;
 }
 
-Transaction* add_transaction(Transaction** head, Transaction* transaction)
+Transaction* transaction_add(Transaction** head, Transaction* transaction)
 {
     Transaction* end;
     for (end = *head; end && end->next; end = end->next);
@@ -168,7 +168,7 @@ Transaction* add_transaction(Transaction** head, Transaction* transaction)
     return transaction;
 }
 
-Transaction* pop_transaction(Transaction** head)
+Transaction* transaction_pop(Transaction** head)
 {
     if (!*head) // no transactions
         return NULL;
@@ -193,7 +193,7 @@ Transaction* pop_transaction(Transaction** head)
     return lt;
 }
 
-Transaction* remove_transaction(Transaction** head, Transaction* transaction)
+Transaction* transaction_remove(Transaction** head, Transaction* transaction)
 {
     if (!*head) // no transactions
         return NULL;
@@ -218,37 +218,37 @@ Transaction* remove_transaction(Transaction** head, Transaction* transaction)
     return t;
 }
 
-void free_transaction(Transaction* t)
+void transaction_free(Transaction* t)
 {
-    free_balance_deltas(t->balance_delta_head);
-    free_counter_deltas(t->counter_delta_head);
-    free_packs_deltas(t->packs_delta_head);
+    balance_deltas_free(t->balance_delta_head);
+    counter_deltas_free(t->counter_delta_head);
+    packs_deltas_free(t->packs_delta_head);
     free(t);
 }
 
-void free_transactions(Transaction* head)
+void transactions_free(Transaction* head)
 {
     Transaction* t = head;
     while (t) {
         Transaction* next = t->next;
-        free_transaction(t);
+        transaction_free(t);
         t = next;
     }
 }
 
-Transaction* invert_transaction(Transaction* transaction)
+Transaction* transaction_invert(Transaction* transaction)
 {
-    Transaction* inverted = create_transaction(UNDO, -1);
+    Transaction* inverted = transaction_alloc(UNDO, -1);
 
     for (BalanceDelta* bd = transaction->balance_delta_head; bd; bd = bd->next) {
-        CurrencyValue* cv = new_negative_currency_value(bd->cv);
-        add_balance_delta(&inverted->balance_delta_head, create_balance_delta(cv, bd->target));
+        CurrencyValue* cv = currency_value_new_negative(bd->cv);
+        balance_delta_add(&inverted->balance_delta_head, balance_delta_alloc(cv, bd->target));
     }
     for (PacksDelta* pd = transaction->packs_delta_head; pd; pd = pd->next) {
-        add_packs_delta(&inverted->packs_delta_head, create_packs_delta(-pd->packs));
+        packs_delta_add(&inverted->packs_delta_head, packs_delta_alloc(-pd->packs));
     }
     for (CounterDelta* cd = transaction->counter_delta_head; cd; cd = cd->next) {
-        add_counter_delta(&inverted->counter_delta_head, create_counter_delta(-cd->counter, cd->target));
+        counter_delta_add(&inverted->counter_delta_head, counter_delta_alloc(-cd->counter, cd->target));
     }
 
     return inverted;
@@ -262,7 +262,7 @@ Transaction* clear_transactions_with_target(Transaction** head, Person* target)
             ||
             (t->counter_delta_head && t->counter_delta_head->target == target)
         ) {
-            remove_transaction(head, t);
+            transaction_remove(head, t);
         }
     }
 

@@ -32,13 +32,13 @@ typedef struct Person{
     struct Person* next;
 } Person;
 
-Person* create_person_full(char* name, int balance, Currency* currency, float thirst, int current_coffees, int total_coffees);
+Person* person_create_full(char* name, int balance, Currency* currency, float thirst, int current_coffees, int total_coffees);
 Person* create_person(char* name, int balance, Currency* currency);
-void free_person(Person *p);
-void free_persons(Person *persons);
-Person* add_person(Person **head, Person *person);
-void remove_person(Person **head, Person *person_to_remove);
-Person* rename_person(Person *persons, Person *person, char *new_name);
+void person_free(Person *p);
+void persons_free(Person *persons);
+Person* person_add(Person **head, Person *person);
+void person_remove(Person **head, Person *person_to_remove);
+Person* person_rename(Person *persons, Person *person, char *new_name);
 Person *get_person_by_name(Person *persons, char *name);
 void sort_persons_by_name(Person **head);
 int get_person_count(Person *persons);

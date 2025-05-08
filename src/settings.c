@@ -21,14 +21,14 @@
 
 #include "currency.h"
 
-Settings* create_settings(Currency *c)
+Settings* settings_alloc(Currency *c)
 {
     Settings *s = malloc(sizeof(Settings));
     s->currency = c;
     return s;
 }
 
-void free_settings(Settings *s)
+void settings_free(Settings *s)
 {
     free(s);
 }

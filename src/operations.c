@@ -27,51 +27,51 @@
 
 void person_pays_debt(Kitty* kitty, Person* person, CurrencyValue* payment)
 {
-    Transaction* t = create_transaction(PERSON_PAYS_DEBT, -1);
-    add_balance_delta(&t->balance_delta_head, create_balance_delta(copy_currency_value(payment), person));
-    add_balance_delta(&t->balance_delta_head, create_balance_delta(copy_currency_value(payment), NULL));
+    Transaction* t = transaction_alloc(PERSON_PAYS_DEBT, -1);
+    balance_delta_add(&t->balance_delta_head, balance_delta_alloc(currency_value_copy(payment), person));
+    balance_delta_add(&t->balance_delta_head, balance_delta_alloc(currency_value_copy(payment), NULL));
 
     apply_transaction(kitty, t);
-    add_transaction(&kitty->transactions, t);
+    transaction_add(&kitty->transactions, t);
 }
 
 void person_buys_misc(Kitty* kitty, Person* person, CurrencyValue* cost)
 {
-    Transaction* t = create_transaction(PERSON_BUYS_MISC, -1);
-    add_balance_delta(&t->balance_delta_head, create_balance_delta(copy_currency_value(cost), person));
+    Transaction* t = transaction_alloc(PERSON_BUYS_MISC, -1);
+    balance_delta_add(&t->balance_delta_head, balance_delta_alloc(currency_value_copy(cost), person));
 
     apply_transaction(kitty, t);
-    add_transaction(&kitty->transactions, t);
+    transaction_add(&kitty->transactions, t);
 }
 
 void person_drinks_coffee(Kitty* kitty, Person* person, int amount)
 {
-    Transaction* t = create_transaction(PERSON_DRINKS_COFFEE, -1);
+    Transaction* t = transaction_alloc(PERSON_DRINKS_COFFEE, -1);
 
-    CounterDelta* cd_p = create_counter_delta(amount, person);    
-    CounterDelta* cd_k = create_counter_delta(amount, NULL);    
-    add_counter_delta(&t->counter_delta_head, cd_p);
-    add_counter_delta(&t->counter_delta_head, cd_k);
+    CounterDelta* cd_p = counter_delta_alloc(amount, person);    
+    CounterDelta* cd_k = counter_delta_alloc(amount, NULL);    
+    counter_delta_add(&t->counter_delta_head, cd_p);
+    counter_delta_add(&t->counter_delta_head, cd_k);
 
-    CurrencyValue* delta_cv = new_negative_currency_value(kitty->price);
-    mul_currency_value(delta_cv, amount);
-    add_balance_delta(&t->balance_delta_head, create_balance_delta(delta_cv, person));
+    CurrencyValue* delta_cv = currency_value_new_negative(kitty->price);
+    currency_value_mul(delta_cv, amount);
+    balance_delta_add(&t->balance_delta_head, balance_delta_alloc(delta_cv, person));
 
     apply_transaction(kitty, t);
-    add_transaction(&kitty->transactions, t);
+    transaction_add(&kitty->transactions, t);
 }
 
 void buy_coffee(Kitty* kitty, int amount, CurrencyValue* cost)
 {
-    Transaction* t = create_transaction(KITTY_BUY_COFFEE, -1);
-    PacksDelta* pd = create_packs_delta(amount);
-    add_packs_delta(&t->packs_delta_head, pd);
+    Transaction* t = transaction_alloc(KITTY_BUY_COFFEE, -1);
+    PacksDelta* pd = packs_delta_alloc(amount);
+    packs_delta_add(&t->packs_delta_head, pd);
 
-    CurrencyValue* delta_cv = new_negative_currency_value(cost);
-    add_balance_delta(&t->balance_delta_head, create_balance_delta(delta_cv, NULL));
+    CurrencyValue* delta_cv = currency_value_new_negative(cost);
+    balance_delta_add(&t->balance_delta_head, balance_delta_alloc(delta_cv, NULL));
 
     apply_transaction(kitty, t);
-    add_transaction(&kitty->transactions, t);
+    transaction_add(&kitty->transactions, t);
 }
 
 void calculate_thirst(Person* persons)
@@ -90,12 +90,12 @@ void calculate_thirst(Person* persons)
 
 void consume_pack(Kitty* kitty)
 {
-    Transaction* t = create_transaction(KITTY_CONSUME_PACK, -1);
-    PacksDelta* pd = create_packs_delta(-1);
-    add_packs_delta(&t->packs_delta_head, pd);
+    Transaction* t = transaction_alloc(KITTY_CONSUME_PACK, -1);
+    PacksDelta* pd = packs_delta_alloc(-1);
+    packs_delta_add(&t->packs_delta_head, pd);
 
     apply_transaction(kitty, t);
-    add_transaction(&kitty->transactions, t);
+    transaction_add(&kitty->transactions, t);
 }
 
 void apply_transaction(Kitty* k, Transaction* t){
@@ -103,9 +103,9 @@ void apply_transaction(Kitty* k, Transaction* t){
 
     for(BalanceDelta* bd = t->balance_delta_head; bd; bd = bd->next) {
         if (bd->target) {
-            add_to_currency_value(bd->target->balance, bd->cv);
+            currency_value_add(bd->target->balance, bd->cv);
         } else { // target is NULL ⇒ apply to kitty
-            add_to_currency_value(k->balance, bd->cv);
+            currency_value_add(k->balance, bd->cv);
         }
     }
     for (PacksDelta* pd = t->packs_delta_head; pd; pd = pd->next) {
@@ -123,8 +123,8 @@ void apply_transaction(Kitty* k, Transaction* t){
 
 void revert_transaction(Kitty* k, Transaction* t)
 {
-    Transaction* inverted_t = invert_transaction(t);
+    Transaction* inverted_t = transaction_invert(t);
     apply_transaction(k, inverted_t);
 
-    free_transaction(pop_transaction(&k->transactions));
+    transaction_free(transaction_pop(&k->transactions));
 }

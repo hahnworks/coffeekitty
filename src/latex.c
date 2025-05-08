@@ -67,9 +67,9 @@ void fprint_latex_title(FILE* file, const char* title)
 void fprint_latex_kitty_properties(FILE* file, Kitty *kitty)
 {
     fprintf(file, "%s\\begin{tabular}{l  l  l}\n", T1);
-    fprintf(file, "%sTotal Balance: & %s & + %i Packs\\\\\n", T2, format_currency_value(kitty->balance, false, true), kitty->packs);
+    fprintf(file, "%sTotal Balance: & %s & + %i Packs\\\\\n", T2, currency_value_format(kitty->balance, false, true), kitty->packs);
     fprintf(file, "%sCounter: & %d & \\\\\n", T2, kitty->counter);
-    fprintf(file, "%sPrice: & %s/Coffee & \\\\\n", T2, format_currency_value(kitty->price, false, true));
+    fprintf(file, "%sPrice: & %s/Coffee & \\\\\n", T2, currency_value_format(kitty->price, false, true));
     fprintf(file, "%sLast Settlement: & & \\\\\n", T2);
     fprintf(file, "%s\\end{tabular}\n", T1);
 }
@@ -105,7 +105,7 @@ int fprint_new_latex_sheet(FILE* file, Kitty *kitty)
         fprintf(file, "%s%s & %s%s%s%s%s & \\rule{0pt}{%fex} &  \\\\\n",
             T3, p->name,
             balance_color_modifier, balance_boldness_modifier,
-            format_currency_value(p->balance, false, false),
+            currency_value_format(p->balance, false, false),
             "}","}",
             row_height);
     }

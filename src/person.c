@@ -23,14 +23,14 @@
 
 #include "currency.h"
 
-Person* create_person_full(char* name, int balance, Currency* currency, float thirst, int current_coffees, int total_coffees)
+Person* person_create_full(char* name, int balance, Currency* currency, float thirst, int current_coffees, int total_coffees)
 {
     Person* p = malloc(sizeof(Person));
     p->name_length = strlen(name);
     p->name = malloc(p->name_length + 1);
     strcpy(p->name, name);
 
-    p->balance = create_currency_value(balance, currency);
+    p->balance = currency_value_alloc(balance, currency);
 
     p->thirst = thirst;
     p->current_coffees = current_coffees;
@@ -43,28 +43,28 @@ Person* create_person_full(char* name, int balance, Currency* currency, float th
 
 Person* create_person(char* name, int balance, Currency* currency)
 {
-    return create_person_full(name, balance, currency, 0., 0, 0);
+    return person_create_full(name, balance, currency, 0., 0, 0);
 }
 
-void free_person(Person *p)
+void person_free(Person *p)
 {
     free(p->name);
-    free_currency_value(p->balance);
+    currency_value_free(p->balance);
 
     free(p);
 }
 
-void free_persons(Person *persons)
+void persons_free(Person *persons)
 {
     Person *p = persons;
     while (p) {
         Person *next = p->next;
-        free_person(p);
+        person_free(p);
         p = next;
     }
 }
 
-Person* add_person(Person **head, Person *person)
+Person* person_add(Person **head, Person *person)
 {
     if (get_person_by_name(*head, person->name) != NULL) {
         return NULL;
@@ -83,7 +83,7 @@ Person* add_person(Person **head, Person *person)
     return person;
 }
 
-void remove_person(Person **head, Person *person_to_remove)
+void person_remove(Person **head, Person *person_to_remove)
 {
     Person *p = *head;
     Person *prev = NULL;
@@ -105,7 +105,7 @@ void remove_person(Person **head, Person *person_to_remove)
     return;
 }
 
-Person* rename_person(Person* persons, Person *person, char *new_name)
+Person* person_rename(Person* persons, Person *person, char *new_name)
 {
     if (get_person_by_name(persons, new_name)){
         return NULL;
@@ -144,8 +144,8 @@ void sort_persons_by_name(Person **old_head)
             }
         }
 
-        remove_person(old_head, first);
-        add_person(&new_head, first);
+        person_remove(old_head, first);
+        person_add(&new_head, first);
     }
 
     *old_head = new_head;    

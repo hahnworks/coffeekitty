@@ -25,7 +25,7 @@
 
 #include "colors.h"
 
-Currency *create_currency(char* isoname, bool prefix, int subunit_digits, char decimal)
+Currency *currency_alloc(char* isoname, bool prefix, int subunit_digits, char decimal)
 {
     Currency *c = malloc(sizeof(Currency));
     strncpy(c->isoname, isoname, 4);
@@ -35,7 +35,7 @@ Currency *create_currency(char* isoname, bool prefix, int subunit_digits, char d
     return c;
 }
 
-CurrencyValue *create_currency_value(int value, Currency *currency)
+CurrencyValue *currency_value_alloc(int value, Currency *currency)
 {
     CurrencyValue *cv = malloc(sizeof(CurrencyValue));
     cv->value = value;
@@ -43,25 +43,25 @@ CurrencyValue *create_currency_value(int value, Currency *currency)
     return cv;
 }
 
-void free_currency(Currency *c)
+void currency_free(Currency *c)
 {
     free(c);
 }
 
-void free_currency_value(CurrencyValue *cv)
+void currency_value_free(CurrencyValue *cv)
 {
     // currency is not freed, as it is a shared resource
     free(cv);
 }
 
-CurrencyValue* copy_currency_value(CurrencyValue *cv)
+CurrencyValue* currency_value_copy(CurrencyValue *cv)
 {
-    return create_currency_value(cv->value, cv->currency);
+    return currency_value_alloc(cv->value, cv->currency);
 }
 
 /* printing */
 
-const char* format_currency_value_color_prefix(CurrencyValue *cv)
+const char* currency_value_format_color_prefix(CurrencyValue *cv)
 {
     (void)cv;
 
@@ -73,14 +73,14 @@ const char* format_currency_value_color_prefix(CurrencyValue *cv)
         return ANSI_RESET;
 }
 
-const char* format_currency_value_color_suffix(CurrencyValue *cv)
+const char* currency_value_format_color_suffix(CurrencyValue *cv)
 {
     (void)cv;
 
     return ANSI_RESET;
 }
 
-const char* format_currency_value(CurrencyValue *cv, bool add_color, bool add_affix)
+const char* currency_value_format(CurrencyValue *cv, bool add_color, bool add_affix)
 {
     _Thread_local static char str[128];
 
@@ -132,39 +132,39 @@ CurrencyValue* ftocv(float value, Currency *currency)
     int subunit_size = 1;
     for (int i = 0; i < currency->subunit_digits; i++)
         subunit_size *= 10;
-    return create_currency_value(round(subunit_size*value), currency);
+    return currency_value_alloc(round(subunit_size*value), currency);
 }
 
 /* mathematical operations */
 
-void add_to_currency_value(CurrencyValue *cv1, CurrencyValue *cv2)
+void currency_value_add(CurrencyValue *cv1, CurrencyValue *cv2)
 {
     cv1->value += cv2->value;
 }
 
-void sub_from_currency_value(CurrencyValue *cv1, CurrencyValue *cv2)
+void currency_value_sub(CurrencyValue *cv1, CurrencyValue *cv2)
 {
     cv1->value -= cv2->value;
 }
 
-void mul_currency_value(CurrencyValue *cv, int factor)
+void currency_value_mul(CurrencyValue *cv, int factor)
 {
     cv->value *= factor;
 }
 
-void div_currency_value(CurrencyValue *cv, int divisor)
+void currency_value_div(CurrencyValue *cv, int divisor)
 {
     cv->value /= divisor;
 }
 
-void negative_currency_value(CurrencyValue *cv)
+void currency_value_negative(CurrencyValue *cv)
 {
     cv->value = -cv->value;
 }
 
-CurrencyValue* new_negative_currency_value(CurrencyValue *cv)
+CurrencyValue* currency_value_new_negative(CurrencyValue *cv)
 {
-    CurrencyValue *ncv = copy_currency_value(cv);
-    negative_currency_value(ncv);
+    CurrencyValue *ncv = currency_value_copy(cv);
+    currency_value_negative(ncv);
     return ncv;
 }

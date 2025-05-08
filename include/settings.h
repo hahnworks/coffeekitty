@@ -32,7 +32,7 @@ typedef struct SettingsEntry{
     struct SettingsEntry *next;
 } SettingsEntry;
 
-Settings* create_settings(Currency* c);
-void free_settings(Settings* s);
+Settings* settings_alloc(Currency* c);
+void settings_free(Settings* s);
 
 #endif

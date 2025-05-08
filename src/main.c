@@ -38,18 +38,18 @@ void clean_exit(int rval, Kitty* kitty, bool save)
 
     if (kitty) {
         if (kitty->persons) {
-            free_persons(kitty->persons);
+            persons_free(kitty->persons);
         }
         if (kitty->settings) {
             if (kitty->settings->currency) {
-                free_currency(kitty->settings->currency);
+                currency_free(kitty->settings->currency);
             }
-            free_settings(kitty->settings);
+            settings_free(kitty->settings);
         }
         if (kitty->transactions) {
-            free_transactions(kitty->transactions);
+            transactions_free(kitty->transactions);
         }
-        free_kitty(kitty);
+        kitty_free(kitty);
     }
 
     exit(rval);
@@ -62,7 +62,7 @@ int main(int argc, char **argv)
     if (access(filepath, F_OK)) {
         fprintf(stderr, "Creating database...\n");
 
-        Settings *settings = create_settings(create_currency("EUR", false, 2, '.'));
+        Settings *settings = settings_alloc(currency_alloc("EUR", false, 2, '.'));
         Person *persons = NULL;
         Transaction* transactions = NULL;
         Kitty *kitty = create_kitty(0, 25, 0, 0, settings, persons, transactions);
