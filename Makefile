@@ -2,6 +2,7 @@ CC = gcc
 CFLAGS = -Iinclude $(shell pkg-config --cflags libxml-2.0) -Wall -Wextra
 LIBS = $(shell pkg-config --libs libxml-2.0) -lm
 SRC = $(wildcard src/*.c)
+INFO = include/metainfo.h
 OBJ = $(SRC:.c=.o)
 TARGET = bin/coffeekitty
 
@@ -18,5 +19,5 @@ $(TARGET): $(OBJ)
 	mkdir -p bin
 	$(CC) $(OBJ) $(LIBS) -o $(TARGET)
 
-%.o: %.c
+%.o: %.c $(INFO)
 	$(CC) $(CFLAGS) -c $< -o $@

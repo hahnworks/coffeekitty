@@ -25,6 +25,7 @@
 #include "person.h"
 #include "currency.h"
 #include "settings.h"
+#include "metainfo.h"
 
 #include "output.h"
 #include "colors.h"
@@ -36,6 +37,8 @@ const Command commands[] = {
     {"#", NULL, "General:"},
     {"print", command_print, "Print table (default)"},
     {"help", command_help, "Print help"},
+    {"about", command_about, "Print about/version information"},
+    {"version", command_about, "Print about/version information"},
 
     {"#", NULL, "Kitty management:"},
     {"set", command_set, "Set various settings"},
@@ -122,6 +125,21 @@ int command_help(int argc, char** argv, Kitty* kitty)
     (void)kitty;
     print_commands(argv[0]);
     return 1;
+}
+
+int command_about(int argc, char** argv, Kitty* kitty)
+{
+    (void)argc;
+    (void)argv;
+    (void)kitty;
+
+    printf("\n%s%s - %s%s\n", ANSI_YELLOW, APPLICATION_NAME, APPLICATION_DESCRIPTION, ANSI_RESET);
+    printf("Version v%s\n", APPLICATION_VERSION);
+    printf("%s\n", COPYRIGHT);
+    printf("\n");
+    printf("%s\n\n", LICENSE);
+
+    return 0;
 }
 
 /* Kitty management */

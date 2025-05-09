@@ -31,6 +31,7 @@ void print_commands(char* argv0);
 // General
 int command_print(int argc, char** argv, Kitty* kitty);
 int command_help(int argc, char** argv, Kitty* kitty);
+int command_about(int argc, char** argv, Kitty* kitty);
 // Kitty management
 int command_set(int argc, char** argv, Kitty* kitty);
 // Transaction management
