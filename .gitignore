@@ -54,3 +54,6 @@ dkms.conf
 
 # clangd cache
 .cache/
+
+# testing
+latex
