@@ -134,7 +134,7 @@ int command_about(int argc, char** argv, Kitty* kitty)
     (void)kitty;
 
     printf("\n%s%s - %s%s\n", ANSI_YELLOW, APPLICATION_NAME, APPLICATION_DESCRIPTION, ANSI_RESET);
-    printf("Version v%s\n", APPLICATION_VERSION);
+    printf("Version %s\n", APPLICATION_VERSION);
     printf("%s\n", COPYRIGHT);
     printf("\n");
     printf("%s\n\n", LICENSE);
