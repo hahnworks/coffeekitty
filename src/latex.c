@@ -21,6 +21,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <time.h>
+
 #include "kitty.h"
 #include "currency.h"
 #include "metainfo.h"
@@ -61,7 +63,11 @@ void fprint_latex_kitty_properties(FILE* file, const Kitty *kitty, const char* p
     fprintf(file, "%s%sTotal Balance: & %s & + %i Packs\\\\\n", prefix, T1, currency_value_format(kitty->balance, false, true), kitty->packs);
     fprintf(file, "%s%sCounter: & %d & \\\\\n", prefix, T1, kitty->counter);
     fprintf(file, "%s%sPrice: & %s/Coffee & \\\\\n", prefix, T1, currency_value_format(kitty->price, false, true));
-    fprintf(file, "%s%sLast Settlement: & & \\\\\n", prefix, T1);
+
+    time_t now = time(NULL);
+    struct tm *tm = localtime(&now);
+
+    fprintf(file, "%s%sLast Settlement: & \\texttt{%04i-%02i-%02i} & \\\\\n", prefix, T1, tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday);
     fprintf(file, "%s\\end{tabular}\n", prefix);
 }
 
