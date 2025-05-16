@@ -133,7 +133,7 @@ int fprint_new_latex_sheet(FILE* file, const Kitty *kitty)
     fprintf(file, "\t\\vspace{\\baselineskip} \\\\ \n");
 
     // TABLE
-    fprint_latex_tallytabular(file, kitty, false, T2);
+    fprint_latex_tallytabular(file, kitty, false, T1);
 
     fprintf(file, "%s", LATEX_EPILOG);
     return 0;
