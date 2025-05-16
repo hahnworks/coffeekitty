@@ -22,6 +22,6 @@
 
 #include <stdio.h>
 
-int fprint_new_latex_sheet(FILE* file, Kitty* kitty);
+int fprint_new_latex_sheet(FILE* file, const Kitty* kitty);
 
 #endif
