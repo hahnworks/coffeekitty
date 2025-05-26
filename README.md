@@ -7,7 +7,7 @@ A terminal-based management tool for collective coffee spending
 I developed this to ease the tracking of coffee consumption in our workgroup.
 Coffeekitty allows you to create a tally sheet with the persons currently drinking coffee, where every person has to add a tally mark when making coffee.
 
-![Screenshot of the output of `coffeekitty` if no additional commands are provided](img/coffeekitty_print.png)
+![Default output of `coffeekitty`](img/coffeekitty_print.png)
 
 At the end of an accounting period, you can enter the coffee consumption, where `coffeekitty` will then calculate the balance (and adjust the height of the tally sheet).
 
